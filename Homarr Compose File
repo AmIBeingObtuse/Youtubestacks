@@ -1,0 +1,36 @@
+version: "3"
+#---------------------------------------------------------------------#
+#     Homarr - A simple, yet powerful dashboard for your server.     #
+#---------------------------------------------------------------------#
+services:
+  homarr:
+    container_name: homarr
+    image: ghcr.io/ajnart/homarr:latest
+    environment:
+      - BASE_URL=
+    networks:
+      homepage:
+        ipv4_address: 172.1.0.3
+    deploy:
+      restart_policy:
+        condition: unless-stopped
+      resources:
+        limits:
+          cpus: "4"
+          memory: 1024M
+    restart: unless-stopped
+    volumes:
+      - C:\Users\keith\Documents\Docker Stuff\Homarr\config:/app/data/configs
+      - C:\Users\keith\Documents\Docker Stuff\Homarr\data:/data
+      - C:\Users\keith\Documents\Docker Stuff\Homarr\icons:/app/public/icons
+      #- /var/run/docker.sock:/var/run/docker.sock:ro # (optional) For docker integrations
+    ports:
+      - 9222:7575
+networks:
+  homepage:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.1.0.2/24
+          gateway: 172.1.0.1
