@@ -1,0 +1,38 @@
+version: '3.3'
+
+services:
+  stirling-pdf:
+    image: frooodle/s-pdf:latest
+    networks:
+      stirling:
+        ipv4_address: 172.2.1.3
+    deploy:
+      restart_policy:
+        condition: unless-stopped
+      resources:
+        limits:
+          cpus: "4"
+          memory: 1024M
+    ports:
+      - '9666:8080'
+    volumes:
+      - C:\Users\keith\Documents\Docker Stuff\Stirling PDF\trainingData:/usr/share/tesseract-ocr/5/tessdata  # Required for extra OCR languages
+      - C:\Users\keith\Documents\Docker Stuff\Stirling PDF\extraConfigs:/configs
+      - C:\Users\keith\Documents\Docker Stuff\Stirling PDF\customFiles:/customFiles/
+      - C:\Users\keith\Documents\Docker Stuff\Stirling PDF\logs:/logs/
+    environment:
+      - DOCKER_ENABLE_SECURITY=true  # Required for authentication
+      - SECURITY_ENABLE_LOGIN=true   # Required for authentication
+
+      # If you don't use the below EV options, the default username will be: admin and the default password will be: stirling.
+      #- SECURITY_INITIALLOGIN_USERNAME=  # Required for authentication - remove after creation of the user.
+      #- SECURITY_INITIALLOGIN_PASSWORD=  # Required for authentication - remove after creation of the user.
+
+networks:
+  stirling:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.2.1.2/24
+          gateway: 172.2.1.1
