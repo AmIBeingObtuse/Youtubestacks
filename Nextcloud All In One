@@ -24,6 +24,13 @@ docker volume create ^
 -o o="bind"
 
 
+Advance config for Nginx Proxy manager (Using another reverse proxy? See alternative congfigs here: https://github.com/nextcloud/all-in-one/blob/main/reverse-proxy.md )
+#-----------Do not copy this line, copy whats underneath!-----------
+client_body_buffer_size 512k;
+proxy_read_timeout 86400s;
+client_max_body_size 0;
+
+
 Nextcloud All In One Compose file
 Amend to your needs, but should be good to go.
 Pasted into Dockge or yaml file or portainer stack!
