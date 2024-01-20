@@ -1,8 +1,21 @@
 Here are the commands for the Dockge Video.
+(A BUG IN THE PROJECT IS CURRENTLY BEING LOOKED INTO, PLEASE USE THE NIGHTLY VERSION - SHOULD BE OKAY AFTER VERSION 1.4.2 THEN YOU CAN GO BACK TO VERSION 1 TAG)
 
 First create the docker network Dockge paste this into windows command prompt:
 
 docker network create --subnet=175.1.1.2/24 --gateway=175.1.1.1 Dockge
+
+This is the nightly run command. See message at the top.
+
+docker run -d ^
+  --name="dockge-container" ^
+  --network=Dockge ^
+  --ip="175.1.1.3" ^
+  -p=9333:5001 ^
+  -v="E:\My Data\Keith\Documents\Docker Stuff\Dockge\app:/app/data" ^
+  -v="E:\My Data\Keith\Documents\Docker Stuff\Dockge\opt:/opt/stacks" ^
+  -v="/var/run/docker.sock:/var/run/docker.sock" ^
+  louislam/dockge:nightly
 
 The in windows command prompt paste this run command (Don't forget to modify the volume directories below to match your own paths just don't modify after the :.
 
