@@ -8,6 +8,7 @@ docker network create --subnet=175.1.1.2/24 --gateway=175.1.1.1 Dockge
 This is the nightly run command. See message at the top.
 
 docker run -d ^
+  --restart=always ^
   --name="dockge-container" ^
   --network=Dockge ^
   --ip="175.1.1.3" ^
