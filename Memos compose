@@ -1,0 +1,26 @@
+version: "3.0"
+services:
+  memos:
+    image: neosmemo/memos:stable
+    networks:
+      memos:
+        ipv4_address: 189.9.3.3
+    deploy:
+      resources:
+        limits:
+          cpus: "4"
+          memory: 1024M
+    container_name: memos
+    volumes:
+      - E:\My Data\Keith\Documents\Docker Stuff\Memos\Data:/var/opt/memos
+    ports:
+      - 5230:5230
+
+networks:
+  memos:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 189.9.3.2/24
+          gateway: 189.9.3.1
