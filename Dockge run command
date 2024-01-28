@@ -21,6 +21,7 @@ docker run -d ^
 The in windows command prompt paste this run command (Don't forget to modify the volume directories below to match your own paths just don't modify after the :.
 
 docker run -d ^
+  --restart=always ^
   --name="dockge-container" ^
   --network=Dockge ^
   --ip="175.1.1.3" ^
