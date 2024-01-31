@@ -1,0 +1,16 @@
+version: "3.3"
+services:
+  komga:
+    image: gotson/komga
+    container_name: komga
+    volumes:
+      - E:\My Data\Keith\Documents\Docker Stuff\Komga\Config:/config
+      - E:\My Data\Keith\Documents\Docker Stuff\Komga\Data:/data
+      - E:\My Data\Keith\Documents\Docker Stuff\Komga\Books:/data/books
+    ports:
+      - 25600:25600
+    user: 1000:1000
+    # remove the whole environment section if you don't need it
+    environment:
+      - TZ=Europe/London
+    restart: unless-stopped
