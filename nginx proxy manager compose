@@ -46,7 +46,7 @@ services:
       MYSQL_ROOT_PASSWORD: createsomethingrandom
       MYSQL_DATABASE: npm
       MYSQL_USER: npm
-      MYSQL_PASSWORD: createsomethingrandom
+      MYSQL_PASSWORD: repeatfromtheabovepasswordintheappservice
     volumes:
       - npmdb:/var/lib/mysql
 
