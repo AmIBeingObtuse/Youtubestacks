@@ -1,0 +1,95 @@
+# The Arrs Stack - youtube.com/@KLTechVideos
+# Prowlarr - Sonarr - Radarr - Lidarr - Readarr
+version: "2.1"
+services:
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:nightly # Change to "latest" for stable
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - E:\My Data\Keith\Documents\Docker Stuff\arrs\Prowlarr\Config:/config
+      - E:\My Data\Keith\Documents\Docker Stuff\arrs\Prowlarr\Backup:/data/Backup
+      - E:\My Data\Keith\Documents\Docker Stuff\arrs\Downloads:/data/downloads
+    ports:
+      - 9697:9696
+    restart: unless-stopped
+    networks:
+      - arrs
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:develop # Change to "latest" for stable
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - E:\My Data\Keith\Documents\Docker Stuff\arrs\Sonarr\Config:/config
+      - E:\My Data\Keith\Documents\Docker Stuff\arrs\Sonarr\Backup:/data/Backup
+      - E:\My Data\Keith\Documents\Docker Stuff\arrs\Sonarr\tvshows:/data/tvshows
+      - E:\My Data\Keith\Documents\Docker Stuff\arrs\Downloads:/data/downloads
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+    networks:
+      - arrs
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - E:\My Data\Keith\Documents\Docker Stuff\arrs\Radarr\Config:/config
+      - E:\My Data\Keith\Documents\Docker Stuff\arrs\Radarr\Movies:/data/movies
+      - E:\My Data\Keith\Documents\Docker Stuff\arrs\Downloads:/data/downloads
+      - E:\My Data\Keith\Documents\Docker Stuff\arrs\Radarr\Backup:/data/Backup
+    ports:
+      - 7878:7878
+    restart: unless-stopped
+    networks:
+      - arrs
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - E:\My Data\Keith\Documents\Docker Stuff\arrs\Lidarr\Config:/config
+      - E:\My Data\Keith\Documents\Docker
+        Stuff\arrs\Lidarr\Music:/data/musicfolder
+      - E:\My Data\Keith\Documents\Docker Stuff\arrs\Downloads:/data/downloads
+      - E:\My Data\Keith\Documents\Docker Stuff\arrs\Lidarr\Backup:/data/Backup
+    ports:
+      - 8686:8686
+    restart: unless-stopped
+    networks:
+      - arrs
+  readarr:
+    image: lscr.io/linuxserver/readarr:develop
+    container_name: readarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - E:\My Data\Keith\Documents\Docker Stuff\arrs\Readarr\Config:/config
+      - E:\My Data\Keith\Documents\Docker Stuff\arrs\Readarr\Books:/data/books # optional
+      - E:\My Data\Keith\Documents\Docker Stuff\arrs\Downloads:/data/downloads # optional
+    ports:
+      - 8787:8787
+    restart: unless-stopped
+    networks:
+      - arrs
+networks:
+  arrs:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 173.25.0.0/16
+          gateway: 173.25.0.1
