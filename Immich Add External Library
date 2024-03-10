@@ -18,6 +18,8 @@ So your volumes section should look like this:
 
 Again make sure you did that for both immich server section and micro services section in your compose!
 
+Now docker compose up/deploy/what ever you use to start the docker containers and compose file.
+
 3. Go into your immich server and click on administration. The next to your user click the edit icon. Scroll down until you see external path and enter:
 
 /usr/src/app/external
