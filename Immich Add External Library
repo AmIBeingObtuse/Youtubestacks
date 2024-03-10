@@ -1,6 +1,8 @@
 This will help you add an external library to immich.
 A copy of my compose and env is at the bottom of this page!
 
+BACKUP I DON'T TAKE RESPONSIBILITY FOR ANY NEGATIVE EFFECTS.
+
 Alternatively use the instructions below:
 
 1. Go to your compose and env file. Add the following to your env file:
@@ -19,6 +21,7 @@ So your volumes section should look like this:
 Again make sure you did that for both immich server section and micro services section in your compose!
 
 Now docker compose up/deploy/what ever you use to start the docker containers and compose file.
+Be aware it could take a few minutes for immich to restart everything.
 
 3. Go into your immich server and click on administration. The next to your user click the edit icon. Scroll down until you see external path and enter:
 
