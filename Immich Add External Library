@@ -1,0 +1,146 @@
+This will help you add an external library to immich.
+A copy of my compose and env is at the bottom of this page!
+
+Alternatively use the instructions below:
+
+1. Go to your compose and env file. Add the following to your env file:
+
+EXTERNAL_LOCATION=C:\Users\keith\Pictures\Immich external #Choose a dir on your host.
+
+2. Go to your compose file and add the following under the upload location in both immich server and micro services under the volumes section:
+
+- ${EXTERNAL_LOCATION}:/usr/src/app/external
+
+So your volumes section should look like this:
+
+- ${UPLOAD_LOCATION}:/usr/src/app/upload
+- ${EXTERNAL_LOCATION}:/usr/src/app/external
+
+Again make sure you did that for both immich server section and micro services section in your compose!
+
+3. Go into your immich server and click on administration. The next to your user click the edit icon. Scroll down until you see external path and enter:
+
+/usr/src/app/external
+
+Click confirm.
+
+4. Top right click your avatar it is a coloured circle with the first letter of your username and click account settings. Scroll down to libraries and click create external library.
+
+5. Click the 3 dot menu next to your new libary and then add path. You will then enter the dir we created above:
+
+/usr/src/app/external
+
+6. Click the 3 dot menu next to your new libary again this time selecting scan new library files.
+Immich will then add your external library contents to your server without moving the files.
+They should be in date order so if a photo was taken in december 2022 you will need to scroll down to december 2022 to find it.
+
+My compose and env file looks like this:
+
+-----------------------------------------------
+version: "3.8"
+#
+# WARNING: Make sure to use the docker-compose.yml of the current release:
+#
+# https://github.com/immich-app/immich/releases/latest/download/docker-compose.yml
+#
+# The compose file on main may not be compatible with the latest release.
+#
+
+name: immich
+services:
+  immich-server:
+    container_name: immich_server
+    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
+    command:
+      - start.sh
+      - immich
+    volumes:
+      - ${UPLOAD_LOCATION}:/usr/src/app/upload
+      - ${EXTERNAL_LOCATION}:/usr/src/app/external
+      - /etc/localtime:/etc/localtime:ro
+    env_file:
+      - .env
+    ports:
+      - 2283:3001
+    depends_on:
+      - redis
+      - database
+    restart: always
+  immich-microservices:
+    container_name: immich_microservices
+    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
+    # extends: # uncomment this section for hardware acceleration - see https://immich.app/docs/features/hardware-transcoding
+    #   file: hwaccel.transcoding.yml 
+    #   service: cpu # set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding
+    command:
+      - start.sh
+      - microservices
+    volumes:
+      - ${UPLOAD_LOCATION}:/usr/src/app/upload
+      - ${EXTERNAL_LOCATION}:/usr/src/app/external
+      - /etc/localtime:/etc/localtime:ro
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - database
+    restart: always
+  immich-machine-learning:
+    container_name: immich_machine_learning
+    # For hardware acceleration, add one of -[armnn, cuda, openvino] to the image tag.
+    # Example tag: ${IMMICH_VERSION:-release}-cuda
+    image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}
+    # extends: # uncomment this section for hardware acceleration - see https://immich.app/docs/features/ml-hardware-acceleration
+    #   file: hwaccel.ml.yml
+    #   service: cpu # set to one of [armnn, cuda, openvino, openvino-wsl] for accelerated inference - use the `-wsl` version for WSL2 where applicable
+    volumes:
+      - model-cache:/cache
+    env_file:
+      - .env
+    restart: always
+  redis:
+    container_name: immich_redis
+    image: redis:6.2-alpine@sha256:afb290a0a0d0b2bd7537b62ebff1eb84d045c757c1c31ca2ca48c79536c0de82
+    restart: always
+  database:
+    container_name: immich_postgres
+    image: tensorchord/pgvecto-rs:pg14-v0.1.11@sha256:0335a1a22f8c5dd1b697f14f079934f5152eaaa216c09b61e293be285491f8ee
+    env_file:
+      - .env
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_DB: ${DB_DATABASE_NAME}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: always
+volumes:
+  pgdata: null
+  model-cache: null
+networks: {}
+
+
+My env file looks like this:
+
+-----------------------------------------------------
+# You can find documentation for all the supported env variables at https://immich.app/docs/install/environment-variables
+
+# The location where your uploaded files are stored
+UPLOAD_LOCATION=C:\Users\keith\Documents\dockerdesktopdata\immch\Uploads
+
+# External, set path in administrative settings under the user first. Then update here to map. Then Go to user settings and setup the path in the external library.
+EXTERNAL_LOCATION=C:\Users\keith\Pictures\Immich external
+
+# The Immich version to use. You can pin this to a specific version like "v1.71.0"
+IMMICH_VERSION="v1.94.1"
+
+# Connection secret for postgres. You should change it to a random password the below is random and not my password.
+DB_PASSWORD=Wfdgsdfgh543fgdfgdfsghsgh5464566ZwouNFZyS7hb%rgeEDo4D2
+
+# The values below this line do not need to be changed
+###################################################################################
+DB_HOSTNAME=immich_postgres
+DB_USERNAME=postgres
+DB_DATABASE_NAME=immich
+
+REDIS_HOSTNAME=immich_redis
