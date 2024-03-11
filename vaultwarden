@@ -1,0 +1,11 @@
+version: "3"
+services:
+  Vaultwarden:
+    image: vaultwarden/server:latest
+    environment:
+      SIGNUPS_ALLOWED: "true"
+    ports:
+      - 9666:80
+    volumes:
+      - C:\Users\keith\Documents\dockerdesktopdata\Vaultwarden\data:/data/
+    restart: unless-stopped
