@@ -24,5 +24,3 @@ services:
       - C:\Users\keith\Documents\dockerdesktopdata\lubeloggepokeys:/root/.aspnet/DataProtection-Keys
     ports:
       - 7474:8080
-    env_file:
-      - .env
