@@ -1,0 +1,21 @@
+version: "3"
+services:
+  navidrome:
+    image: deluan/navidrome:latest
+    ports:
+      - 4533:4533
+    environment:
+      # Optional: put your config options customization here. Examples:
+      ND_SCANSCHEDULE: 23h
+      ND_LOGLEVEL: info
+      ND_BASEURL: null
+      ND_MUSICFOLDER: /music
+      ND_AUTOIMPORTPLAYLISTS: true
+      ND_UILOGINBACKGROUNDURL: https://i.imgur.com/JeWDIlv.png
+      ND_UIWELCOMEMESSAGE: Welcome
+      ND_DEFAULTTHEME: Spotify-ish
+      ND_SESSIONTIMEOUT: 24h
+    volumes:
+      - C:\Users\keith\Documents\DockerStuff\Navidrome\Data:/data
+      - C:\Users\keith\Documents\DockerStuff\Navidrome\Music:/music:ro
+    restart: unless-stopped
