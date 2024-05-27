@@ -3,7 +3,7 @@ Here are the commands for the Dockge Video.
 
 First create the docker network Dockge paste this into windows command prompt:
 
-docker network create --subnet=175.1.1.2/24 --gateway=175.1.1.1 Dockge
+docker network create --subnet=175.1.1.0/24 --gateway=175.1.1.1 Dockge
 
 This is the nightly run command. See message at the top.
 
