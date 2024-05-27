@@ -22,5 +22,5 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: 189.9.3.2/24
+        - subnet: 189.9.3.0/24
           gateway: 189.9.3.1
