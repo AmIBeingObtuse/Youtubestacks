@@ -1,0 +1,51 @@
+When in casa os open the terminal don't install via the app store.
+
+Login using your OS username and password.
+
+Run
+sudo apt update
+
+sudo apt upgrade
+
+Run (You can change the port number on the left but not the right handside if you wish to).
+sudo git clone -b release https://github.com/netbox-community/netbox-docker.git
+cd netbox-docker
+sudo tee docker-compose.override.yml <<EOF
+services:
+  netbox:
+    ports:
+      - "8000:8080"
+EOF
+
+Make sure you are still in the netbox-docker directory before running these commands.
+
+Now run
+sudo docker compose pull
+
+when all files have downloaded run
+docker compose up
+
+It will fail as unhealthy. You must give it at least circa 2 minutes to spin up.
+
+After 2 minutes run for linux without Casa OS
+
+sudo docker compose up -d
+
+or
+
+sudo docker compose up with Casa OS
+
+the only difference is a detached session is needed without casa os to continue running without stopping the docker containers.
+
+Wait until the Get 200 log messages as shown in the video then create the admin user.
+Again make sure you are still in the netbox-docker directory whcih if you closed the terminal on Casa OS you will need to run
+
+netbox-docker
+
+creat the admin user run
+
+sudo docker compose exec netbox /opt/netbox/netbox/manage.py createsuperuser
+
+create your username, email and password.
+
+Then go to your machines ip address and port you created. Such as http://localhost:8000 or replace localhost with your machine ip.
