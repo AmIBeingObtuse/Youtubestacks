@@ -1,0 +1,47 @@
+KL Tech Videos Youtube Netbox Install Guide video commands
+www.youtube.com/@kltechvideos/videos
+
+
+Ensure docker desktop is installed this should also install with compose - https://docs.docker.com/desktop/install/windows-install/
+Ensure git is installed - https://www.git-scm.com/download/win
+
+Run command prompt as an administrator
+
+Change directory to where you want to install Netbox (Copy gitfiles).
+
+In mycase the command would be:
+cd C:\Users\keith\Downloads\KL Tech Videos Downloads
+
+Now pull the git repository
+git clone -b release https://github.com/netbox-community/netbox-docker.git
+
+Now change directory into netbox-docker
+cd netbox-docker
+
+Now lets create our yml file (You can edit the port number on the left to change the port, do not edit the right handside port number)
+(
+echo services:
+echo   netbox:
+echo     ports:
+echo       - "8000:8080"
+) > docker-compose.override.yml
+
+Now run it
+docker compose up
+
+you will see it failes as unhealthy at first. You must wait circa 2 minutes for everything to spin up.
+
+When the 2 minutes has ended run
+docker compose up -d
+
+In seconds you should see everying in green, stated, running and healthy.
+
+Now we need to create our admin user for Netbox.
+
+Make sure your still in the netbox directory.
+cd netbox-docker
+
+then run
+docker compose exec netbox /opt/netbox/netbox/manage.py createsuperuser
+
+You will enter a username, email and password. Make these secure. You can now go to http://localhost:8000 or change the port to whatever you created and login.
