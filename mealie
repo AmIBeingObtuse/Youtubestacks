@@ -1,0 +1,55 @@
+# My compose file for mealie and my youtube video which will be live from June 24th! copy below the line
+# www.youtube.com/@kltechvideos/videos - this video link https://youtu.be/2aXDyBG9fZ8
+#-------------------------------------------------------------------------------------------------------
+
+services:
+  mealie:
+    image: ghcr.io/mealie-recipes/mealie:v1.8.0 #
+    container_name: mealie
+    restart: always
+    ports:
+      - 9925:9000 #
+    deploy:
+      resources:
+        limits:
+          memory: 1000M #
+    volumes:
+      - C:\Users\keith\Documents\dockerdesktopdata\Mealie\data:/app/data/
+    environment:
+      # Set Backend ENV Variables Here
+      ALLOW_SIGNUP: true
+      PUID: 1000
+      PGID: 1000
+      TZ: Europe/London
+      MAX_WORKERS: 1
+      WEB_CONCURRENCY: 1
+      BASE_URL: http://192.168.1.59:9925
+      # Database Settings
+      DB_ENGINE: postgres
+      POSTGRES_USER: mealie
+      POSTGRES_PASSWORD: mealie
+      POSTGRES_SERVER: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: mealie
+    depends_on:
+      postgres:
+        condition: service_healthy
+  postgres:
+    container_name: postgres
+    image: postgres:15
+    restart: always
+    volumes:
+      - mealie-pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: mealie
+      POSTGRES_USER: mealie
+    healthcheck:
+      test:
+        - CMD
+        - pg_isready
+      interval: 30s
+      timeout: 20s
+      retries: 3
+volumes:
+  mealie-pgdata: null
+networks: {}
