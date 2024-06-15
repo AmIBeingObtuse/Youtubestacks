@@ -31,9 +31,8 @@ services:
       POSTGRES_SERVER: postgres
       POSTGRES_PORT: 5432
       POSTGRES_DB: mealie
-    depends_on:
-      postgres:
-        condition: service_healthy
+    networks:
+      - mealie-network
   postgres:
     container_name: postgres
     image: postgres:15
@@ -43,13 +42,9 @@ services:
     environment:
       POSTGRES_PASSWORD: mealie
       POSTGRES_USER: mealie
-    healthcheck:
-      test:
-        - CMD
-        - pg_isready
-      interval: 30s
-      timeout: 20s
-      retries: 3
+    networks:
+      - mealie-network
 volumes:
   mealie-pgdata: null
-networks: {}
+networks:
+  mealie-network: null
