@@ -2,9 +2,10 @@
 # www.youtube.com/@kltechvideos/videos - this video link https://youtu.be/ifABVyhhjiE
 #-------------------------------------------------------------------------------------------------------
 
+version: "3.9" # or newer
 services:
   mealie:
-    image: ghcr.io/mealie-recipes/mealie:v1.8.0 #
+    image: ghcr.io/mealie-recipes/mealie:v1.8.0 # or your preferred version
     container_name: mealie
     restart: always
     ports:
@@ -14,7 +15,7 @@ services:
         limits:
           memory: 1000M #
     volumes:
-      - C:\Users\keith\Documents\dockerdesktopdata\Mealie\data:/app/data/
+      - mealie-data:/app/data/
     environment:
       # Set Backend ENV Variables Here
       ALLOW_SIGNUP: true
@@ -23,14 +24,14 @@ services:
       TZ: Europe/London
       MAX_WORKERS: 1
       WEB_CONCURRENCY: 1
-      BASE_URL: http://192.168.1.59:9925
+      BASE_URL: https://your.domain.com #delte if not used.
       # Database Settings
       DB_ENGINE: postgres
       POSTGRES_USER: mealie
-      POSTGRES_PASSWORD: mealie
-      POSTGRES_SERVER: postgres
+      POSTGRES_PASSWORD: gfdhfghdgh
+      POSTGRES_SERVER: postgres # Use the container name
       POSTGRES_PORT: 5432
-      POSTGRES_DB: mealie
+      POSTGRES_DB: mealie_db # Use your Mealie database name
     networks:
       - mealie-network
   postgres:
@@ -40,11 +41,13 @@ services:
     volumes:
       - mealie-pgdata:/var/lib/postgresql/data
     environment:
-      POSTGRES_PASSWORD: mealie
+      POSTGRES_PASSWORD: gfdhfghdgh
       POSTGRES_USER: mealie
+      POSTGRES_DB: mealie_db
     networks:
       - mealie-network
 volumes:
+  mealie-data: null
   mealie-pgdata: null
 networks:
   mealie-network: null
