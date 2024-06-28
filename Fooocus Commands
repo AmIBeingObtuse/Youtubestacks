@@ -1,0 +1,38 @@
+These commands are for installing fooocus ai image generator from my youtube video - Fooocus Easy AI images Windows and Linux - https://youtu.be/His6Fkk94-8 
+
+Windows download links: https://github.com/lllyasviel/Fooocus?tab=readme-ov-file#download
+
+Linux (I used ubuntu server - Also make sure your linux has the latest nvidia drivers installed and I also had nvidia toolkit).
+
+First create a directory on your linux machine where you will install Fooocus to -
+
+mkdir /Fooocus
+
+Then install python 3.10 -
+
+sudo apt update
+sudo apt-get install python3.10
+
+Then run the commands from the Fooocus github under native python linux - 
+
+git clone https://github.com/lllyasviel/Fooocus.git
+cd Fooocus
+pip3 install -r requirements_versions.txt
+
+If you have UFW firewall then allow port 7865 - 
+
+sudo ufw allow 7865/tcp
+
+you can then run Fooocus when inside the installed directory using -
+
+nohup sudo python3 entry_with_update.py --listen &
+
+You can confirm its running -
+
+ps aux | grep entry_with_update.py
+
+You can go to http://yourip:7865 (Mine was http://192.168.1.59:7865)
+
+You can kill the process when finished - 
+
+sudo pkill -f entry_with_update.py
