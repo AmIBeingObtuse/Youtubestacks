@@ -1,0 +1,49 @@
+#By default I have disabled the networking side of this compose. You can re-enable it by removing the # from the relevant sections as shown. in my video.
+#If you re-enable the networks you will need to amend them to your setup parameters. The same for storage ect...
+#This compose is related to my upcoming/already out as of 15.07.2024 https://youtu.be/PKOQOnciy3E KL Tech Videos # www.youtube.com@/kltechvideos/videos
+version: "3" # Add version for compatibility 
+services:
+  windows:
+    image: dockurr/windows
+    container_name: windows11server1
+    #networks:
+      #win11server1_macvlanwin11server1:
+        #ipv4_address: 192.168.1.3
+    environment:
+      VERSION: win11
+      LANGUAGE: English
+      REGION: en-GB
+      KEYBOARD: en-GB
+      DISK_SIZE: 62GB
+      RAM_SIZE: 4G
+      CPU_CORES: "4"
+      USERNAME: Docker
+      PASSWORD: Gates
+      #DHCP: Y
+      # ARGUMENTS: "-device usb-host,vendorid=0x1234,productid=0x1234"
+      # DISK2_SIZE: "32G"
+      # DISK3_SIZE: "64G"
+      # MANUAL: "Y" 
+      # VERSION: "https://example.com/win.iso" 
+    devices:
+      #- /dev/vhost-net
+      - /dev/kvm
+    device_cgroup_rules:
+      - c *:* rwm
+      #volumes:
+      #- /home/user/example.iso:/custom.iso
+      #- /home/example:/storage2
+      #- /mnt/data/example:/storage3
+      #- /var/win:/storage
+      #- /home/user/example:/shared
+      #- /home/user/example:/oem 
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - 8006:8006
+      - 3389:3389/tcp
+      - 3389:3389/udp
+    stop_grace_period: 2m
+#networks:
+  #win11server1_macvlanwin11server1:
+    #external: true
