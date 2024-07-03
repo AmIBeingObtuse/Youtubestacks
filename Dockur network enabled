@@ -1,0 +1,58 @@
+#By default I have enabled the networking side of this compose. This is the exact compose I use.
+#If you re-enable the networks you will need to amend them to your setup parameters. The same for storage ect...
+#This compose is related to my upcoming/already out as of 15.07.2024 https://youtu.be/PKOQOnciy3E KL Tech Videos # www.youtube.com@/kltechvideos/videos
+
+version: "3" # Add version for compatibility 
+services:
+  windows:
+    image: dockurr/windows
+    container_name: windows
+    networks:
+      networknamehere:
+        ipv4_address: 192.168.1.2 #Container IP from your network here Make sure its available!
+    environment:
+      VERSION: win11
+      LANGUAGE: English
+      REGION: en-GB
+      KEYBOARD: en-GB
+      DISK_SIZE: 62GB
+      RAM_SIZE: 4G
+      CPU_CORES: "4"
+      #USERNAME: Docker #If you don't change this windows username will be Docker with no password.
+      #PASSWORD: Gates
+      DHCP: Y #Enable this to aqauire a second ip from your network but one that windows will use.
+      #ARGUMENTS: "-device usb-host,vendorid=0x1234,productid=0x1234"
+      #DISK2_SIZE: "32G"
+      #DISK3_SIZE: "64G"
+      #MANUAL: "Y" 
+      #VERSION: "https://example.com/win.iso" 
+    devices:
+      - /dev/vhost-net # This allows direct network access and must be used if using the DHCP option above and the macvlan.
+      - /dev/kvm
+    device_cgroup_rules:
+      - c *:* rwm
+    volumes:
+      # - /home/user/example.iso:/custom.iso
+      # - /home/example:/storage2
+      # - /mnt/data/example:/storage3
+      - /home/kflix/myapps/containervms/testwin11demo:/storage # This is for your primary hard drive. You must change this to suit your setup.
+    # - /home/user/example:/shared
+    # - /home/user/example:/oem 
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - 8006:8006
+      - 3389:3389/tcp
+      - 3389:3389/udp
+    stop_grace_period: 2m
+networks:
+  # Change all details below so your network details are used.
+  networknamehere:
+    #external: true  # Use this external true if setting up a second one of these compose so you can use the same macvlan.
+    driver: macvlan # Add the driver for the network
+    driver_opts:
+      parent: enp6s0 # Replace with the actual interface (e.g., eth0)
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24
+          gateway: 192.168.1.1
