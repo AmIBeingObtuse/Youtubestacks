@@ -1,3 +1,4 @@
+#Jellyfin docker compose on windows nvidia gpu wsl2
 services:
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:latest
