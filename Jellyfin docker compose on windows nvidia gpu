@@ -1,0 +1,31 @@
+services:
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - JELLYFIN_PublishedServerUrl=192.168.1.59 #optional
+      - gpus=all
+    volumes:
+      - C:\Users\keith\Downloads\KLTECHVIDEOS\jellyfindocker/library:/config
+      - C:\Users\keith\Downloads\KLTECHVIDEOS\jellyfindocker\TV
+        Shows:/data/tvshows
+      - C:\Users\keith\Downloads\KLTECHVIDEOS\jellyfindocker\Movies:/data/movies
+    ports:
+      - 8096:8096
+      - 8920:8920 #optional
+      - 7359:7359/udp #optional
+      - 1900:1900/udp #optional
+    deploy:
+      # Add this section
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities:
+                - gpu
+    restart: unless-stopped
+networks: {}
