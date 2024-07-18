@@ -7,4 +7,8 @@ However as my video will also show a run command here is the updated command:
 
 Copy and paste that entire command into your terminal or command prompt adjusting your paths or leaving them as is for volumes.
 
+On docker with a linux host
 docker run --restart unless-stopped -p 5001:5001 -v /var/run/docker.sock:/var/run/docker.sock -v ./data:/app/data -v /opt/stacks:/opt/stacks -e DOCKGE_STACKS_DIR=/opt/stacks louislam/dockge:1
+
+On docker with a windows host
+docker run --restart unless-stopped -p 5001:5001 -v //var/run/docker.sock://var/run/docker.sock -v ${PWD}\data:/app/data -v /opt/stacks:/opt/stacks -e DOCKGE_STACKS_DIR=/opt/stacks louislam/dockge:1
