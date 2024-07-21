@@ -1,0 +1,16 @@
+#This compose file is rleated to my youtube video The Ultimate Jellyfin and Jellyseer guide published on 22/07/2024.
+# https://youtu.be/Sa_0ijRqf_c
+---
+services:
+  jellyseerr:
+    image: fallenbagel/jellyseerr:latest
+    container_name: jellyseerr
+    environment:
+      - LOG_LEVEL=info
+      - TZ=Europe/London
+      - PORT=5055 #optional
+    ports:
+      - 5055:5055
+    volumes:
+      - C:\Users\keith\Downloads\KLTECHVIDEOS\Jellyseerr\config:/app/config
+    restart: unless-stopped
