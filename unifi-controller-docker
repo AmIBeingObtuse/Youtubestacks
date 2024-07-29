@@ -1,18 +1,18 @@
-version: "3.8" # Specify a recent Docker Compose version
+version: "3.8"
 services:
   unifi:
-    image: jacobalberty/unifi
+    image: jacobalberty/unifi:latest
+    #hostname: unifi
     container_name: unifi
-    user: unifi
+    #user: unifi
     restart: unless-stopped
     ports:
       - 8080:8080
       - 8443:8443
       - 3478:3478/udp
     volumes:
-      - /home/kflix/myapps/unifi:/unifi # Use your actual local path
+      - /home/kflix/myapps/unifi:/unifi
+      - /home/kflix/myapps/unifi/backup:/unifi/data/backup
     environment:
       - TZ=Europe/London
     network_mode: host
-networks: {}
-#Don't forget to go into settings, system, advanced, scroll down to inform host override, check box and enter host machine ip address. Save and restart container.
