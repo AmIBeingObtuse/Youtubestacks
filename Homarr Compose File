@@ -8,9 +8,10 @@ services:
     image: ghcr.io/ajnart/homarr:latest
     environment:
       - BASE_URL=
-    networks:
-      homepage:
-        ipv4_address: 172.1.0.3
+#Remove the # if you want to use networks as its optional.
+    #networks:
+      #homepage:
+        #ipv4_address: 172.1.0.3
     deploy:
       restart_policy:
         condition: unless-stopped
@@ -26,11 +27,12 @@ services:
       #- /var/run/docker.sock:/var/run/docker.sock:ro # (optional) For docker integrations
     ports:
       - 9222:7575
-networks:
-  homepage:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.1.0.0/24
-          gateway: 172.1.0.1
+#Remove the # if you want to use networks. Optional.
+#networks:
+  #homepage:
+    #driver: bridge
+    #ipam:
+      #driver: default
+      #config:
+        #- subnet: 172.1.0.0/24
+          #gateway: 172.1.0.1
