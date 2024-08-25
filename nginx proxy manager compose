@@ -1,65 +1,12 @@
-version: "3"
+#Updated compose as no longer need to separate the database.
 services:
   app:
-    image: jc21/nginx-proxy-manager:2.10.4
-    networks:
-      npm:
-        ipv4_address: 172.22.0.4
-    deploy:
-      resources:
-        limits:
-          cpus: "4"
-          memory: 1024M
+    image: 'docker.io/jc21/nginx-proxy-manager:latest'
     restart: unless-stopped
     ports:
-      - 443:443
-      - 81:81
-    environment:
-      REAL_IP_HEADER: X-Forwarded_For
-      DB_MYSQL_HOST: db
-      DB_MYSQL_PORT: 3306
-      DB_MYSQL_USER: npm
-      DB_MYSQL_PASSWORD: createsomethingrandom
-      DB_MYSQL_NAME: npm
-      # Uncomment this if IPv6 is not enabled on your host
-      # DISABLE_IPV6: 'true'
+      - '80:80'
+      - '81:81'
+      - '443:443'
     volumes:
-      - npmapp:/data
-      - npmletsencrypt:/etc/letsencrypt
-    depends_on:
-      - db
-
-  db:
-    image: jc21/mariadb-aria:latest
-    networks:
-      npm:
-        ipv4_address: 172.22.0.3
-    deploy:
-      resources:
-        limits:
-          cpus: "4"
-          memory: 1024M
-    restart: unless-stopped
-    ports:
-      - 3306:3306
-    environment:
-      MYSQL_ROOT_PASSWORD: createsomethingrandom
-      MYSQL_DATABASE: npm
-      MYSQL_USER: npm
-      MYSQL_PASSWORD: repeatfromtheabovepasswordintheappservice
-    volumes:
-      - npmdb:/var/lib/mysql
-
-networks:
-  npm:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.22.0.0/24
-          gateway: 172.22.0.1
-
-volumes:
-  npmapp:
-  npmdb:
-  npmletsencrypt:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
