@@ -1,0 +1,142 @@
+#This file contains all commands used in my latest youtube video mini series The Ultimate Home Lab, EP2 Deploy Defend Expose.
+# www.youtube.com/@kltechvideos (If not shown video uploading)
+
+I also remvoed docker snap which I installed during episode 1 at the end using command:
+
+sudo snap remove docker --purge
+
+ONLY RUN THAT if your following from last video and have ubuntu installed from scratch.
+
+This will remove docker and delete all docker stuff! Otherwise continue in the video.
+
+sudo apt update -y
+
+sudo apt upgrade -y
+
+sudo apt install ufw -y
+
+# Add Docker's official GPG key:
+
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+
+echo \
+"deb \[arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc\] https://download.docker.com/linux/ubuntu \
+$(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+
+install docker
+
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+install dockge (Obviously change to suit your needs)
+
+sudo docker run -d --restart unless-stopped -p 5001:5001 -v /var/run/docker.sock:/var/run/docker.sock -v \~/docker/dockge/app/data:/app/data -v \~/docker/dockge/opt/stacks:/opt/stacks -e DOCKGE_STACKS_DIR=/opt/stacks louislam/dockge:latest
+
+ip addr command
+
+sudo apt install iproute2
+
+nextcloud aio ports. 8443, 3478, 9980, 5432, 6379, 3310, 9200, 9300, 9000, 11000,
+
+sudo apt install ddclient  
+sudo systemctl status ddclient  
+sudo systemctl start ddclient  
+sudo systemctl enable ddclient  
+sudo ddclient -force
+
+/etc/ddclient.conf
+
+sudo apt install dnsutils
+
+  
+sudo systemctl start docker
+
+sudo systemctl enable docker
+
+client_body_buffer_size 512k;
+proxy_read_timeout 86400s;
+client_max_body_size 0;
+
+Fail2ban
+
+sudo apt-get install fail2ban
+
+Create .local files
+
+sudo cp /etc/fail2ban/fail2ban.conf /etc/fail2ban/fail2ban.local
+
+or instead of copying the cp command below just run the:
+
+sudo nano  /etc/fail2ban/jail.local
+
+command instead and copy and paste the contents below.
+
+sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local  
+  
+sudo nano  /etc/fail2ban/jail.local
+
+jail.local file contains
+
+[nginx-proxy-manager]
+enabled = true
+filter = nginx-proxy-manager
+logpath = /home/kflix/myapps/NPM/data/logs/proxy-host-[0-9]*_access.log
+port = http,https
+maxretry = 10
+bantime = 3600
+banaction = iptables-multiport
+findtime = 3600
+chain = DOCKER-USER
+ignoreip = 192.168.1.1 192.168.1.0/24 192.168.2.0/24 10.200.26.0/24 192.168.6.0/24
+
+  
+sudo nano /etc/fail2ban/filter.d/nginx-proxy-manager.conf
+
+Nginx-proxy-manager filter file contains:
+
+[INCLUDES]
+
+[Definition]
+
+failregex = ^<HOST>.+" (4\d\d|3\d\d) (\d\d\d|\d) .+$
+            ^.+ 4\d\d \d\d\d - .+ \[Client <HOST>\] \[Length .+\] ".+" .+$
+
+
+To check for a specific ip ban use, Check a specific IP ban:
+
+sudo iptables -L -n | grep 195.88.86.34
+
+
+
+sudo systemctl status fail2ban
+
+sudo systemctl restart fail2ban
+
+sudo systemctl stop fail2ban
+
+
+
+Show what ip's are banned:
+
+sudo fail2ban-client status nginx-proxy-manager
+
+
+
+See what jails are active:
+
+sudo fail2ban-client status
+
+
+
+Unban IP:
+
+sudo fail2ban-client set nginx-proxy-manager unbanip 195.88.86.34
+
+ 
