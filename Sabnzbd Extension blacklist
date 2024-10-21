@@ -1,0 +1,7 @@
+#Copy the below extentions into your Sabnzbd blacklist removing any extentions you do want to download.
+#This will protect your nzb downloader from downloading viruses, scripts and malware including ransomeware!.
+
+#All of line 4 are the extentions. You can modify it. This is my setup for a purely arrs apps download system so I really only want mkv, mp4, mp4, epub, ebook. Video, tv and books. So the rest I don't need.
+#Latley more and more malware are being discovered targeting people automating downloads via tools like the arrs and sab so this really helps.
+
+exe, com, bat, ink, js, vbs, ps1, sh, py, php, pl, rb, jar, class, swf, scr, hta, msi, msp, msu, pif, ink, chm, vb, vba, ws, wsf, wsh, xll, docm, dotm, xlsm, xltm, pptm, potm, ppsm, sldm, thmx, xlam, ppam, docb, dotb, xltb, mht, mhtml, url, iqylink, deamon, elf, dmg, iso, cue, nrg, img, udf, wim, vhd, vhdx, vmdk, ova, tf, pb, savedmodel, h5, ckpt, meta, index, data-00000-of-00001, vocab, config, model, pt, tgz, tar.gz, bz2, xz, izma ace, arc, cab, jar, izh, pea, sit, sitx, sqx, zoo, pak, upk, bsa, dat, nzb, nzbs, nzb.gz, nzb.bz2
