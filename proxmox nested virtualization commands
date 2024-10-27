@@ -1,0 +1,24 @@
+#This command stack is from my video Proxmox Nested Virtualization on yourtube.... https://youtu.be/FZnzWNyo4gc
+
+#Check if virtualization is enabled for Intel - If Y then its enabled!
+
+cat /sys/module/kvm_intel/parameters/nested
+
+#AMD - if 1 then its enabled!
+
+cat /sys/module/kvm_amd/parameters/nested
+
+
+#If its not enabled on Intel run
+
+echo "options kvm-intel nested=Y" > /etc/modprobe.d/kvm-intel.conf
+
+#If its not enabled on AMD run
+
+echo "options kvm-amd nested=1" > /etc/modprobe.d/kvm-amd.conf
+
+Reboot proxmox
+
+#Now run this command replacing vm_id with the id of your vm on proxmox see the video for instructions linked above!
+
+qm set vm_id --cpu host
