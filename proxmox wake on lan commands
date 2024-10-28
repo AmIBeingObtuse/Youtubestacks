@@ -1,0 +1,42 @@
+#This file contains commands used in my youtube video Proxmox Wake On Lan https://youtu.be/JIHQzj_fKh8 (Which may or may not be available yet)
+
+apt install ethtool -y
+
+ip addr
+
+find network card id
+
+ethtool enp6so
+
+ethtool -s enp6s0 wol g
+
+ethtool enp6so
+
+now wake on lan g should be shown
+
+create a service so it always works
+
+nano /etc/systemd/system/wol.service
+
+add the below into the file we just created make sure we amend the network card id
+
+[Unit]
+Description=Enable Wake-on-LAN
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/ethtool -s <interface_name> wol g
+
+[Install]
+WantedBy=multi-user.target
+
+then we can run
+
+systemctl enable wol.service
+
+and
+
+systemctl start wol.service
+
+now shutdown the service and send a magic packet command to the server.
