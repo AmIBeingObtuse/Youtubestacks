@@ -95,6 +95,7 @@ banaction = iptables-multiport
 findtime = 3600
 chain = DOCKER-USER
 ignoreip = 192.168.1.1 192.168.1.0/24 192.168.2.0/24 10.200.26.0/24 192.168.6.0/24
+backend = auto
 
   
 sudo nano /etc/fail2ban/filter.d/nginx-proxy-manager.conf
