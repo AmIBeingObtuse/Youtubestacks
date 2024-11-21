@@ -6,11 +6,11 @@ ip addr
 
 find network card id
 
-ethtool enp6so
+ethtool enp6s0
 
 ethtool -s enp6s0 wol g
 
-ethtool enp6so
+ethtool enp6s0
 
 now wake on lan g should be shown
 
@@ -26,7 +26,7 @@ After=network.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/sbin/ethtool -s <interface_name> wol g
+ExecStart=/usr/sbin/ethtool -s enp6s0 wol g
 
 [Install]
 WantedBy=multi-user.target
