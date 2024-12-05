@@ -129,7 +129,7 @@ services:
     volumes:
       - /DATA/AppData/cmc/sonarr/config:/config
       - /DATA/AppData/cmc/downloads/complete:/data/downloads
-      - /DATA/AppData/cmc/backup/sonarr:/data/backup
+      - /DATA/AppData/cmc/backup/sonarr:/backup
       - /DATA/AppData/cmc/tvseries:/data/tvseries
       - /DATA/AppData/cmc/tvseries:/data/tvseries1
     #ports:
