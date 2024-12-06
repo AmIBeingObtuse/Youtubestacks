@@ -1,3 +1,8 @@
+# The Ultimate CASA OS Media Server All In One KL Tech Videos Compose file.
+# www.youtube.com/@kltechvideos/videos
+# This compsose is shown and used in my latest video EP3 The ultimate download station.
+# Located here... https://youtu.be/Ji1p_ZWVFDU
+
 services:
   gluetun:
     image: qmcgaw/gluetun
