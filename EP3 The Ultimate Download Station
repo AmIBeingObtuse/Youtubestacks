@@ -1,8 +1,3 @@
-# The Ultimate CASA OS Media Server All In One KL Tech Videos Compose file.
-# www.youtube.com/@kltechvideos/videos
-# This compsose is shown and used in my latest video EP3 The ultimate download station.
-# Located here... TBC
-
 services:
   gluetun:
     image: qmcgaw/gluetun
@@ -51,6 +46,7 @@ services:
       - /dev/dri/:/dev/dri/
     # Remove all the # in the section below if you are using nvidia.
     # If you are using AMD just proceed as it is.
+    # Make sure the nvidia toolkit is installed on the host.
     #deploy:
       #resources:
         #reservations:
@@ -69,6 +65,11 @@ services:
       - /DATA/AppData/cmc/movies:/data/movies
     restart: unless-stopped
     network_mode: service:gluetun
+    # ports:
+    #   - 8096:8096 # Jellyfin UI HTTP
+    #   - 8920:8920 # optional # Jellyfin UI HTTPS
+    #   - 7359:7359/udp # optional # Jellyfin proprietary discovery protocol
+    #   - 1900:1900/udp # optional # Jellyfin Simple Service Discovery Protocol
 
   deluge:
     image: lscr.io/linuxserver/deluge:latest
@@ -84,6 +85,11 @@ services:
       - /DATA/AppData/cmc/downloads/complete:/data/downloads
     restart: unless-stopped
     network_mode: service:gluetun
+    # ports:
+    #   - 8112:8112 # Deluge UI
+    #   - 6881:6881 # Deluge Incoming port TCP
+    #   - 6881:6881/udp # Deluge Incoming port UDP
+    #   - 58846:58846 # optional # Deluge Outgoing Port TCP
 
   sabnzbd:
     image: lscr.io/linuxserver/sabnzbd:latest
@@ -99,6 +105,8 @@ services:
       - /DATA/AppData/cmc/backup/sabnzb:/backup
     restart: unless-stopped
     network_mode: service:gluetun
+    # ports:
+    #   - 8080:8080 # SabNZB UI
 
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
@@ -113,6 +121,8 @@ services:
       - /DATA/AppData/cmc/downloads/complete:/data/downloads
     restart: unless-stopped
     network_mode: service:gluetun
+    # ports:
+    #  - 9696:9696 # Prowlarr UI
 
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
@@ -129,6 +139,8 @@ services:
       - /DATA/AppData/cmc/tvseries:/data/tvseries1
     restart: unless-stopped
     network_mode: service:gluetun
+    # ports:
+    #   - 8989:8989 # Sonarr UI
 
   radarr:
     image: lscr.io/linuxserver/radarr:latest
@@ -144,6 +156,8 @@ services:
       - /DATA/AppData/cmc/movies:/data/movies
     restart: unless-stopped
     network_mode: service:gluetun
+    # ports:
+    #   - 7878:7878 # Radarr UI
 
   lidarr:
     image: lscr.io/linuxserver/lidarr:latest
@@ -159,6 +173,8 @@ services:
       - /DATA/AppData/cmc/backup/lidarr:/backup
     restart: unless-stopped
     network_mode: service:gluetun
+    # ports:
+    #   - 8686:8686 # Lidarr UI
 
   readarr:
     image: lscr.io/linuxserver/readarr:develop
@@ -174,6 +190,8 @@ services:
       - /DATA/AppData/cmc/backup/readarr:/backup
     restart: unless-stopped
     network_mode: service:gluetun
+    # ports:
+    #   - 8787:8787 # Readarr UI
 
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
@@ -187,6 +205,8 @@ services:
       - PGID=1000
     restart: unless-stopped
     network_mode: service:gluetun
+    # ports:
+    #   - 8191:8191 # Flaresover UI
 
   jellyseerr:
     image: fallenbagel/jellyseerr:latest
@@ -198,3 +218,5 @@ services:
       - /DATA/AppData/cmc/jellyseerr/config:/app/config
     restart: unless-stopped
     network_mode: service:gluetun
+    # ports:
+    #   - 5055:5055 # Jellyseer
