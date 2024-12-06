@@ -7,8 +7,6 @@ services:
   gluetun:
     image: qmcgaw/gluetun
     container_name: gluetun
-    # line above must be uncommented to allow external containers to connect.
-    # See https://github.com/qdm12/gluetun-wiki/blob/main/setup/connect-a-container-to-gluetun.md#external-container-to-gluetun
     cap_add:
       - NET_ADMIN
     devices:
@@ -36,8 +34,8 @@ services:
     volumes:
       - /DATA/AppData/cmc/gluetun:/gluetun
     environment:
-      - OPENVPN_PASSWORD=
-      - OPENVPN_USER=
+      - OPENVPN_PASSWORD=yourvpnpassword  # Make sure to fill in your actual password! In NordVPN this is under manual credentials
+      - OPENVPN_USER=yourvpnusername    # Make sure to fill in your actual username! In NordVPN this is under manual credentials
       - SERVER_COUNTRIES=United Kingdom
       - TZ=Europe/London
       - UPDATER_PERIOD=24h
@@ -49,20 +47,26 @@ services:
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:latest
     container_name: jellyfin
+    devices:
+      - /dev/dri/:/dev/dri/
+    # Remove all the # in the section below if you are using nvidia.
+    # If you are using AMD just proceed as it is.
+    #deploy:
+      #resources:
+        #reservations:
+          #devices:
+            #- driver: nvidia
+              #count: 1
+              #capabilities: [gpu]
     environment:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/London
-      #- JELLYFIN_PublishedServerUrl=http://192.168.0.5 #optional
+      - NVIDIA_VISIBLE_DEVICES=all
     volumes:
       - /DATA/AppData/cmc/jellyfin/library:/config
       - /DATA/AppData/cmc/tvseries:/data/tvseries
       - /DATA/AppData/cmc/movies:/data/movies
-    #ports:
-    #  - 8096:8096
-    #  - 8920:8920 #optional
-    #  - 7359:7359/udp #optional
-    #  - 1900:1900/udp #optional
     restart: unless-stopped
     network_mode: service:gluetun
 
@@ -73,16 +77,11 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/London
-      - DELUGE_LOGLEVEL=error #optional
+      - DELUGE_LOGLEVEL=error
     volumes:
       - /DATA/AppData/cmc/deluge:/config
       - /DATA/AppData/cmc/downloads/incomplete:/data/incomplete-downloads
       - /DATA/AppData/cmc/downloads/complete:/data/downloads
-    #ports:
-    #  - 8112:8112
-    #  - 6881:6881
-    #  - 6881:6881/udp
-    #  - 58846:58846 #optional
     restart: unless-stopped
     network_mode: service:gluetun
 
@@ -98,8 +97,6 @@ services:
       - /DATA/AppData/cmc/downloads/complete:/data/downloads
       - /DATA/AppData/cmc/downloads/incomplete:/data/incomplete-downloads
       - /DATA/AppData/cmc/backup/sabnzb:/backup
-    #ports:
-    #  - 8080:8080
     restart: unless-stopped
     network_mode: service:gluetun
 
@@ -114,8 +111,6 @@ services:
       - /DATA/AppData/cmc/prowlarr/config:/config
       - /DATA/AppData/cmc/backup/prowlarr:/backup
       - /DATA/AppData/cmc/downloads/complete:/data/downloads
-    #ports:
-    #  - 9696:9696
     restart: unless-stopped
     network_mode: service:gluetun
 
@@ -132,8 +127,6 @@ services:
       - /DATA/AppData/cmc/backup/sonarr:/backup
       - /DATA/AppData/cmc/tvseries:/data/tvseries
       - /DATA/AppData/cmc/tvseries:/data/tvseries1
-    #ports:
-    #  - 8989:8989 # Map host port 9989 to container port 9989
     restart: unless-stopped
     network_mode: service:gluetun
 
@@ -149,8 +142,6 @@ services:
       - /DATA/AppData/cmc/downloads/complete:/data/downloads
       - /DATA/AppData/cmc/backup/radarr:/backup
       - /DATA/AppData/cmc/movies:/data/movies
-    #ports:
-    #  - 7878:7878
     restart: unless-stopped
     network_mode: service:gluetun
 
@@ -166,8 +157,6 @@ services:
       - /DATA/AppData/cmc/music:/data/music
       - /DATA/AppData/cmc/downloads/complete:/data/downloads
       - /DATA/AppData/cmc/backup/lidarr:/backup
-    #ports:
-    #  - 8686:8686
     restart: unless-stopped
     network_mode: service:gluetun
 
@@ -180,16 +169,13 @@ services:
       - TZ=Europe/London
     volumes:
       - /DATA/AppData/cmc/readarr/config:/config
-      - /DATA/AppData/cmc/books:/data/books #optional
+      - /DATA/AppData/cmc/books:/data/books
       - /DATA/AppData/cmc/downloads/complete:/data/downloads
       - /DATA/AppData/cmc/backup/readarr:/backup
-    #ports:
-    #  - 8787:8787
     restart: unless-stopped
     network_mode: service:gluetun
 
   flaresolverr:
-    # DockerHub mirror flaresolverr/flaresolverr:latest
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: flaresolverr
     environment:
@@ -199,8 +185,6 @@ services:
       - TZ=Europe/London
       - PUID=1000
       - PGID=1000
-    #ports:
-    #  - 8191:8191
     restart: unless-stopped
     network_mode: service:gluetun
 
@@ -210,9 +194,7 @@ services:
     environment:
       - LOG_LEVEL=debug
       - TZ=Europe/London
-    #ports:
-    #  - 5055:5055
-    volumes: 
+    volumes:
       - /DATA/AppData/cmc/jellyseerr/config:/app/config
     restart: unless-stopped
     network_mode: service:gluetun
