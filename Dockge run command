@@ -11,4 +11,4 @@ On docker with a linux host
 docker run --restart unless-stopped -p 5001:5001 -v /var/run/docker.sock:/var/run/docker.sock -v ./data:/app/data -v /opt/stacks:/opt/stacks -e DOCKGE_STACKS_DIR=/opt/stacks louislam/dockge:1
 
 On docker with a windows host (run with powershell)
-docker run --restart unless-stopped -p 5001:5001 -v //var/run/docker.sock://var/run/docker.sock -v ${PWD}\data:/app/data -v /opt/stacks:/opt/stacks -e DOCKGE_STACKS_DIR=/opt/stacks louislam/dockge:1
+docker run --restart unless-stopped -p 5001:5001 -v //var/run/docker.sock://var/run/docker.sock -v C:\Users\keith\Documents\dockerstuff\dockge\app\data:/app/data -v C:\Users\keith\Documents\dockerstuff\dockge\opt\stacks:/opt/stacks -e DOCKGE_STACKS_DIR=/opt/stacks louislam/dockge:1
