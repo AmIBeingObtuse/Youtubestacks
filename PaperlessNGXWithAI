@@ -1,0 +1,55 @@
+#KL Tech Videos Run PaperlessNGX with AI from my new video - https://youtu.be/TiJGTYYSryM
+version: "3.9"
+services:
+  broker:
+    image: docker.io/library/redis:7
+    restart: unless-stopped
+    volumes:
+      - /home/kflix/myapps/paperlessngxai/redis/data:/data
+    networks:
+      - paper
+  db:
+    image: docker.io/library/postgres:16
+    restart: unless-stopped
+    volumes:
+      - /home/kflix/myapps/paperlessngxai/pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: paperless
+      POSTGRES_USER: paperless
+      POSTGRES_PASSWORD: paperless
+    networks:
+      - paper
+  webserver:
+    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    restart: unless-stopped
+    container_name: paperless
+    depends_on:
+      - db
+      - broker
+    ports:
+      - 4567:8000
+    volumes:
+      - /home/kflix/myapps/paperlessngxai/data:/usr/src/paperless/data
+      - /home/kflix/myapps/paperlessngxai/media:/usr/src/paperless/media
+      - /home/kflix/myapps/paperlessngxai/export:/usr/src/paperless/export
+      - /home/kflix/myapps/paperlessngxai/consume:/usr/src/paperless/consume
+    env_file: .env
+    environment:
+      PAPERLESS_REDIS: redis://broker:6379
+      PAPERLESS_DBHOST: db
+      PAPERLESS_DBUSER: paperless
+      PAPERLESS_DBPASS: paperless
+      PAPERLESS_CONSUMER_POLLING: 10
+      PAPERLESS_URL: https://papersplease.k-flix.dynu.com
+    networks:
+      - paper
+  paperless-ai:
+    image: clusterzx/paperless-ai
+    container_name: paperless-ai
+    volumes:
+      - /home/kflix/myapps/paperlessngxai/paperless-ai_data:/app/data
+    #ports:
+      #- 4568:3000
+    network_mode: host
+networks:
+  paper: null
