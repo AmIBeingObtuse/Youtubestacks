@@ -1,0 +1,163 @@
+#Ultimate download station without gluetun vpn
+services:
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    devices:
+      - /dev/dri/:/dev/dri/
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - NVIDIA_VISIBLE_DEVICES=all
+    volumes:
+      - /DATA/AppData/cmc/jellyfin/library:/config
+      - /DATA/AppData/cmc/tvseries:/data/tvseries
+      - /DATA/AppData/cmc/movies:/data/movies
+    restart: unless-stopped
+    ports:
+      - 8096:8096 # Jellyfin UI HTTP
+      - 8920:8920 # optional # Jellyfin UI HTTPS
+      - 7359:7359/udp # optional # Jellyfin proprietary discovery protocol
+      - 1900:1900/udp # optional # Jellyfin Simple Service Discovery Protocol
+
+  deluge:
+    image: lscr.io/linuxserver/deluge:latest
+    container_name: deluge
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - DELUGE_LOGLEVEL=error
+    volumes:
+      - /DATA/AppData/cmc/deluge:/config
+      - /DATA/AppData/cmc/downloads/incomplete:/data/incomplete-downloads
+      - /DATA/AppData/cmc/downloads/complete:/data/downloads
+    restart: unless-stopped
+    ports:
+      - 8112:8112 # Deluge UI
+      - 6881:6881 # Deluge Incoming port TCP
+      - 6881:6881/udp # Deluge Incoming port UDP
+      - 58846:58846 # optional # Deluge Outgoing Port TCP
+
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: sabnzbd
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - /DATA/AppData/cmc/sabnzb/config:/config
+      - /DATA/AppData/cmc/downloads/complete:/data/downloads
+      - /DATA/AppData/cmc/downloads/incomplete:/data/incomplete-downloads
+      - /DATA/AppData/cmc/backup/sabnzb:/backup
+    restart: unless-stopped
+    ports:
+      - 8080:8080 # SabNZB UI
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - /DATA/AppData/cmc/prowlarr/config:/config
+      - /DATA/AppData/cmc/backup/prowlarr:/backup
+      - /DATA/AppData/cmc/downloads/complete:/data/downloads
+    restart: unless-stopped
+    ports:
+      - 9696:9696 # Prowlarr UI
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - /DATA/AppData/cmc/sonarr/config:/config
+      - /DATA/AppData/cmc/downloads/complete:/data/downloads
+      - /DATA/AppData/cmc/backup/sonarr:/backup
+      - /DATA/AppData/cmc/tvseries:/data/tvseries
+      - /DATA/AppData/cmc/tvseries:/data/tvseries1
+    restart: unless-stopped
+    ports:
+      - 8989:8989 # Sonarr UI
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - /DATA/AppData/cmc/radarr/Config:/config
+      - /DATA/AppData/cmc/downloads/complete:/data/downloads
+      - /DATA/AppData/cmc/backup/radarr:/backup
+      - /DATA/AppData/cmc/movies:/data/movies
+    restart: unless-stopped
+    ports:
+      - 7878:7878 # Radarr UI
+
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - /DATA/AppData/cmc/lidarr/config:/config
+      - /DATA/AppData/cmc/music:/data/music
+      - /DATA/AppData/cmc/downloads/complete:/data/downloads
+      - /DATA/AppData/cmc/backup/lidarr:/backup
+    restart: unless-stopped
+    ports:
+      - 8686:8686 # Lidarr UI
+
+  readarr:
+    image: lscr.io/linuxserver/readarr:develop
+    container_name: readarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+    volumes:
+      - /DATA/AppData/cmc/readarr/config:/config
+      - /DATA/AppData/cmc/books:/data/books
+      - /DATA/AppData/cmc/downloads/complete:/data/downloads
+      - /DATA/AppData/cmc/backup/readarr:/backup
+    restart: unless-stopped
+    ports:
+      - 8787:8787 # Readarr UI
+
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_HTML=${LOG_HTML:-false}
+      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
+      - TZ=Europe/London
+      - PUID=1000
+      - PGID=1000
+    restart: unless-stopped
+    ports:
+      - 8191:8191 # Flaresover UI
+
+  jellyseerr:
+    image: fallenbagel/jellyseerr:latest
+    container_name: jellyseerr
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=Europe/London
+    volumes:
+      - /DATA/AppData/cmc/jellyseerr/config:/app/config
+    restart: unless-stopped
+    ports:
+      - 5055:5055 # Jellyseer
