@@ -1,0 +1,162 @@
+### The commands were used in my Clam AV Secure your homelab video - https://youtu.be/XrNvbdUqeUM KL Tech Videos
+
+### Ensure you copy entire lines for the commands as they are long!
+### Install command =
+
+sudo mkdir -p /etc/clamav /var/log/clamav /var/lib/clamav && sudo touch /var/log/clamav/freshclam.log && sudo chown clamav:clamav /etc/clamav /var/log/clamav /var/log/clamav/freshclam.log && sudo chown -R clamav:clamav /var/lib/clamav && sudo chmod 755 /var/lib/clamav && sudo mkdir -p /var/lib/clamav/clamav.conf && sudo apt-get update && sudo apt-get install clamav clamav-daemon -y || true && sudo dpkg --configure -a || true && echo "LocalSocket /var/run/clamav/clamd.ctl" | sudo tee /etc/clamav/clamd.conf && sudo systemctl stop clamav-freshclam && sudo nano /etc/clamav/freshclam.conf
+
+### This will auto open the config file in nano.
+
+### Copy and paste this config data into the file and ctrl + O to save, ctrl + X to exit.
+
+# Automatically created by the clamav-freshclam postinst
+
+# Comments will get lost when you reconfigure the clamav-freshclam package
+
+DatabaseOwner clamav
+
+UpdateLogFile /var/log/clamav/freshclam.log
+
+LogVerbose false
+
+LogSyslog false
+
+LogFacility LOG_LOCAL6
+
+LogFileMaxSize 0
+
+LogRotate true
+
+LogTime true
+
+Foreground false
+
+Debug false
+
+MaxAttempts 5
+
+DatabaseDirectory /var/lib/clamav
+
+DNSDatabaseInfo current.cvd.clamav.net
+
+ConnectTimeout 30
+
+ReceiveTimeout 0
+
+TestDatabases yes
+
+ScriptedUpdates yes
+
+CompressLocalDatabase no
+
+Bytecode true
+
+NotifyClamd /etc/clamav/clamd.conf
+
+# Check for new database 24 times a day
+
+Checks 24
+
+DatabaseMirror db.local.clamav.net
+
+DatabaseMirror database.clamav.net
+
+
+### Run your virus signature database update
+
+sudo freshclam
+
+### Run your first scan, change the path!
+
+clamscan -r -i --bell /home/kflix/myapps/Dockge
+
+### Create your script
+
+sudo nano /usr/local/bin/weekly_clamscan.sh
+
+
+### Enter your config and ensure you change it to your settings! I.e change target dir to scan and your email address!
+
+#!/bin/bash
+
+# Configuration
+SCAN_TARGET="/home/kflix/myapps/Dockge"  # Replace with the directory you want to scan
+LOG_FILE="/var/log/clamav/weekly_scan.log"
+EMAIL_RECIPIENT="PutYourEmailHere" # Replace with your email address
+
+### Update virus definitions
+sudo freshclam
+
+# Run ClamAV scan and capture output
+clamscan -r -i --bell --log="$LOG_FILE" "$SCAN_TARGET"
+
+# Check if any infected files were found
+if [ $? -eq 0 ]; then
+  SUBJECT="ClamAV Scan: No Malware Found"
+  BODY="ClamAV scan of $SCAN_TARGET completed. No malware found."
+else
+  SUBJECT="ClamAV Scan: Malware Detected"
+  BODY="ClamAV scan of $SCAN_TARGET completed. Infected files found. Check $LOG_FILE for details."
+fi
+
+# Send email notification
+echo "$BODY" | mail -s "$SUBJECT" "$EMAIL_RECIPIENT"
+
+# Clean up old log files, keeping only the most recent log file
+find /var/log/clamav/ -name "weekly_scan.log.*" -type f -delete
+
+# Rotate log files
+if [ -f "$LOG_FILE" ]; then
+  mv "$LOG_FILE" "$LOG_FILE.$(date +%Y%m%d%H%M%S)"
+fi
+
+# Ctrl + O to save, Ctrl + X to exit
+
+# Then make the script executable
+
+
+sudo chmod +x /usr/local/bin/weekly_clamscan.sh
+
+
+# Setup your cronjob
+
+sudo crontab -e
+
+# Add to the bottom of the file. Amend as described in the video.
+
+0 2 * * 0 /usr/local/bin/weekly_clamscan.sh
+
+# Other information:
+
+Explanation of the cron schedule:
+0: Minutes past the hour (0 means run at the start of the hour).
+2: Hour of the day (2 means 2 AM in 24-hour format).
+*: Day of the month ( * means every day of the month).
+*: Month of the year ( * means every month).
+0: Day of the week ( 0 means Sunday. 0 and 7 both represent Sunday in cron).
+/usr/local/bin/weekly_clamscan.sh: The full path to your script that you want to execute.
+
+
+# Uninstall/Delete everything we just did (Minus the script)...
+
+sudo apt-get remove --purge clamav clamav-daemon -y && sudo rm -rf /etc/clamav /var/log/clamav /var/lib/clamav
+
+### Setup email notifications to work with the script
+
+### Install
+
+sudo apt install ssmtp mailutils
+
+
+# Open config file and replace all with this...
+
+root=YourEmailHereAndBelow # Your email address to receive system emails (can be the same as notification email)
+mailhub=smtp.gmail.com:587        # Gmail SMTP server and port (TLS)
+rewriteDomain=gmail.com           # Your domain (can be gmail.com if using Gmail)
+hostname=your_server_hostname      # Your server's hostname (optional, but recommended) You can type hostname in the terminal to see what yours is.
+FromLineOverride=YES
+UseSTARTTLS=YES
+AuthUser=YourEmailHere  # Your Gmail address
+AuthPass=your_gmail_app_password    # Your Gmail App Password (see note below)
+
+Thanks for watching.
