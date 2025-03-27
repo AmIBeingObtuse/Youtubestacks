@@ -1,0 +1,36 @@
+#From KL Tech Videos, Don't forget to like, subscribe and welcome oboard!
+# Video URL https://youtu.be/wcK7iUNBUyo
+
+version: "3"
+services:
+  docmost:
+    image: docmost/docmost:latest
+    depends_on:
+      - dbdocmost
+      - redisdocmost
+    environment:
+      PUID: 1000
+      GUID: 1000
+      APP_URL: https://yourdomain.com
+      APP_SECRET: RandonNumbersAndLettersHere
+      DATABASE_URL: postgresql://docmost:SamePasswordAsBelow@dbdocmost:5432/docmost?schema=public
+      REDIS_URL: redis://redisdocmost:6379
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    volumes:
+      - /home/kflix/myapps/docmostkltechvideos/app/data/storage:/app/data/storage #Change this path to your own! only change left of the colon :
+  dbdocmost:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: docmost
+      POSTGRES_USER: docmost
+      POSTGRES_PASSWORD: MakeSureItsAlsoCopiedIntoDBUrlAbove
+    restart: unless-stopped
+    volumes:
+      - /home/kflix/myapps/docmostkltechvideos/var/lib/postgressql/data:/var/lib/postgresql/data #Change this path to your own! only change left of the colon :
+  redisdocmost:
+    image: redis:7.2-alpine
+    restart: unless-stopped
+    volumes:
+      - /home/kflix/myapps/docmostkltechvideos/redis/data:/data #Change this path to your own! only change left of the colon :
