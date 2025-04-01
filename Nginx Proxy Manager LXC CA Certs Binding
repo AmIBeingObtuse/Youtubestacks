@@ -1,0 +1,83 @@
+# Now I don't use proxmox, I have only touched on it breifly. This is Google Gemini's method for adding a bindmount to the LXC container ect...
+# So please treat it with a touch of salt as it was not written or tested by me!
+
+Goal: Make a CA certificate file located on your Proxmox Host available at a specific path inside the NPM LXC container.
+
+Method: Configure a Bind Mount Point in the LXC container's configuration file on the Proxmox Host.
+
+Steps:
+
+Prepare the CA Certificate on the Proxmox Host:
+
+Decide where you want to store the CA certificate(s) on the Proxmox host node itself (not inside the LXC yet). A common practice is to create a dedicated directory.
+Example: Create a directory on the host:
+Bash
+
+sudo mkdir -p /mnt/lxc_share/npm_certs
+(You can choose a different path like /opt/lxc_share/certs or even /root/certs, but be mindful of permissions. /mnt/ is often suitable for shared data).
+Place your CA certificate file (let's assume it's named ca.pem) into this directory on the host:
+Bash
+
+sudo cp /path/where/you/generated/ca.pem /mnt/lxc_share/npm_certs/ca.pem
+Ensure the file has appropriate read permissions.
+Identify your NPM LXC Container ID (CTID):
+
+Find the numerical ID of your Nginx Proxy Manager LXC container. You can see this in the Proxmox Web UI in the server view (left panel) or by running pct list on the Proxmox host shell. Let's assume your CTID is 123.
+Edit the LXC Configuration File on the Proxmox Host:
+
+SSH into your Proxmox host node.
+
+The configuration file for your LXC container is located at /etc/pve/lxc/<CTID>.conf.
+
+Edit this file using a text editor like nano (you'll likely need sudo):
+
+Bash
+
+sudo nano /etc/pve/lxc/123.conf
+(Replace 123 with your actual CTID)
+
+Add a line at the bottom of the file to define the bind mount. The format is mp[number]: /path/on/host,mp=/path/inside/lxc,[options].
+
+mp[number]: Mount point index. Start with mp0 if you don't have any others, otherwise use the next available number (e.g., mp1, mp2).
+/path/on/host: The absolute path to the directory you created in Step 1 on the Proxmox host (/mnt/lxc_share/npm_certs in our example).
+mp=/path/inside/lxc: The absolute path where the host directory should appear inside the LXC container. It's generally best practice to mount into /mnt/ inside the container or create a specific directory. Let's use /etc/nginx/mounted_certs for clarity.
+[options]: Add ro=1 for read-only access, which is highly recommended for security when just sharing certificates into the container.
+Add this line (adjusting mp0 if needed):
+
+Code snippet
+
+mp0: /mnt/lxc_share/npm_certs,mp=/etc/nginx/mounted_certs,ro=1
+Save the file and exit the editor (in nano, press Ctrl+X, then Y, then Enter).
+
+Restart the LXC Container:
+
+For bind mount changes to take effect, you must stop and then start the LXC container. A simple reboot might not be sufficient.
+You can do this via the Proxmox Web UI (select the LXC, click Shutdown, wait, then click Start) or via the host shell:
+Bash
+
+sudo pct stop 123
+# Wait a few seconds for it to stop completely
+sudo pct start 123
+(Replace 123 with your CTID)
+Verify the Mount Inside the LXC:
+
+Access the console of your NPM LXC container. You can do this via the Proxmox Web UI (>_ Console) or using pct enter on the host:
+Bash
+
+sudo pct enter 123
+Check if the directory and your CA file are now visible inside the LXC at the path you specified (/etc/nginx/mounted_certs in our example):
+Bash
+
+ls -l /etc/nginx/mounted_certs/
+You should see your ca.pem file listed.
+Configure Nginx Proxy Manager:
+
+Now, when you go to the "Advanced" tab for your proxy host in the NPM web UI, you can use the path inside the LXC where the CA certificate is mounted.
+Your Nginx directives should look like this (using our example path):
+Nginx
+
+# Path *inside* the LXC container where ca.pem is mounted
+ssl_client_certificate /etc/nginx/mounted_certs/ca.pem;
+ssl_verify_client on;
+Save the NPM configuration.
+Now, Nginx running inside your LXC container will be able to access /etc/nginx/mounted_certs/ca.pem (which is actually the file from /mnt/lxc_share/npm_certs on your host) to verify client certificates for mTLS. You have successfully translated the Docker volume concept to a Proxmox LXC bind mount!
