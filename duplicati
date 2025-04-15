@@ -1,0 +1,21 @@
+# This compose follows my latest video how to turn a zimaboard into the ultimate backup server.
+# KL Tech Videos - 'https://youtu.be/zNNQNsNsBjE'
+
+services:
+  duplicati:
+    image: lscr.io/linuxserver/duplicati:latest
+    container_name: duplicati
+    environment:
+      - PUID=1000 # I chose 0 in mine due to permissions issues when restoring!
+      - PGID=1000 # I chose 0 in mine due to permissions issues when restoring!
+      - TZ=Europe/London
+      - SETTINGS_ENCRYPTION_KEY=
+      - CLI_ARGS= #optional
+      - DUPLICATI__WEBSERVICE_PASSWORD=
+    volumes:
+      - /path/to/duplicati/config:/config
+      - /path/to/backups:/backups
+      - /path/to/source:/source
+    ports:
+      - 8200:8200
+    restart: unless-stopped
