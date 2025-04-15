@@ -1,5 +1,5 @@
 # This compose follows my latest video how to turn a zimaboard into the ultimate backup server.
-# KL Tech Videos - 'https://youtu.be/zNNQNsNsBjE'
+# KL Tech Videos - 'https://youtu.be/OW05uZDMaWc'
 
 services:
   duplicati:
