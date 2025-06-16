@@ -8,7 +8,7 @@ Login using your OS username and password.
 Run
 sudo apt update
 
-sudo apt upgrade
+sudo apt upgrade (Only if you need to as this will upgrade a lot of packages on your system which can break things.)
 
 Run (You can change the port number on the left but not the right handside if you wish to).
 sudo git clone -b release https://github.com/netbox-community/netbox-docker.git
