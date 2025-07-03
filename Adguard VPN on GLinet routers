@@ -1,0 +1,63 @@
+#Adguard VPN on GLinet routers. KL Tech Videos.
+#Link to video https://youtu.be/QZ22qKO9tFo
+
+#Adguard vpn how to link: https://adguard-vpn.com/kb/adguard-vpn-for-linux/setting-up-on-a-router/openwrt/
+#The commands in the offical ADG VPN help pages do not work on the GLinet routers without the below additional setup.
+
+Commands used in the video command:
+
+ssh -o HostKeyAlgorithms=+ssh-rsa root@192.168.8.1
+
+opkg update
+
+opkg install curl kmod-tun ca-certificates
+
+curl -fsSL https://raw.githubusercontent.com/AdguardTeam/AdGuardVPNCLI/master/scripts/release/install.sh | sh -s -- -v
+
+
+/opt/adguardvpn_cli/adguardvpn-cli login
+
+/opt/adguardvpn_cli/adguardvpn-cli list-locations
+
+/opt/adguardvpn_cli/adguardvpn-cli connect -l GB
+
+/opt/adguardvpn_cli/adguardvpn-cli disconnect
+
+uci set network.tun0='interface'
+uci set network.tun0.proto='none'
+uci set network.tun0.device='tun0'
+uci commit network
+/etc/init.d/network reload
+
+uci show firewall
+
+uci show firewall | grep "=zone"
+uci add_list firewall.@zone[1].network='tun0'
+uci commit firewall
+/etc/init.d/firewall reload
+
+opkg install nano
+
+nano /etc/config/firewall
+
+config zone
+        option name 'adg'
+        list device 'tun0'
+        option forward 'REJECT'
+        option output 'ACCEPT'
+        option masq '1'
+        option mtu_fix '1'
+        option input 'REJECT'
+
+
+Go into luci.
+
+Network > Firewall > Edit Adg
+
+Ensure Masquerading and MSS clamping turned on.
+
+Allow forward from source zones = lan
+
+Save, save and apply.
+
+/opt/adguardvpn_cli/adguardvpn-cli connect -l GB
