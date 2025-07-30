@@ -3,6 +3,10 @@ A copy of my compose and env is at the bottom of this page!
 
 BACKUP FIRST!!!!!!!!! I DON'T TAKE RESPONSIBILITY FOR ANY NEGATIVE EFFECTS.
 
+watch out for env version for immich changes and docker compose alterations in immich releases.
+
+Do not just blindly copy and paste this information!
+
 Alternatively use the instructions below:
 
 1. Go to your compose and env file. Add the following to your env file:
