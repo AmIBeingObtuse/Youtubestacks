@@ -1,0 +1,32 @@
+#These are the commands used in my Safeline Web Application Firewall video.
+#The video can be seen here on KL Tech Videos on yourtube https://youtu.be/WJZSXXQAwWg (From 8PM UK Time 19th August 2025)
+
+#Safeline Website - https://safepoint.cloud/landing/safeline
+#Safeline Github - https://github.com/chaitin/SafeLine
+#Install Page - https://docs.waf.chaitin.com/en/GetStarted/Deploy
+
+#One line install command -
+
+sudo bash -c "$(curl -fsSLk https://waf.chaitin.com/release/latest/manager.sh)" -- --en
+
+#After install go to web broswer https://YOURIP:9443 (For example mine is https://192.168.15.24:9443
+
+#When setting up upstream proxy hosts if the machine ip doesnt work and the app is located on the same host as the safeline waf use the loopback address such as http://127.0.0.1:9999
+
+#Backup commands. Do not forget to change them to your own setup and directories
+
+switch to source dir
+
+cd /data/safeline
+
+sudo docker compose down
+
+mkdir -p ~/backup/safeline/18.08.25-21.08/data/ 
+
+sudo cp -a /data/safeline ~/backup/safeline/18.08.25-21.08/data/
+
+sudo rm -r /data/safeline
+
+sudo mkdir /data/safeline
+
+sudo cp -a ~/backup/safeline/18.08.25-21.08/data/safeline/. /data/safeline/
