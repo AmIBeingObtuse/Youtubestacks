@@ -1,0 +1,41 @@
+#These commands are for use with my latest video on KL Tech Videos.
+#Host Your Own Private Wikipedia which will be released for members now and everyone else on August 25th.
+#Link https://youtu.be/HqgJsnI13EE
+
+Commands (Ensure you do not forget to amend these commands to suit your needs especially directories):
+
+Kiwix Apps
+
+https://kiwix.org/en/applications/
+
+Kiwix Library
+
+https://library.kiwix.org/#lang=eng
+
+Kiwix Docker Run Command ( https://github.com/kiwix/kiwix-tools/blob/main/docker/server/README.md )
+
+docker run -v /tmp/zim:/data -p 8080:8080 ghcr.io/kiwix/kiwix-serve '*.zim'
+
+Winbdows
+
+Download wikipedia in powershell (Change directory to the kiwix dir)
+
+cd C:\Users\keith\Documents\Kiwix
+
+Invoke-WebRequest -Uri "https://download.kiwix.org/zim/wikipedia/wikipedia_en_all_maxi_2024-01.zim" -OutFile "wikipedia_en_all_maxi_2024-01.zim"
+
+Linux
+
+cd /your/kiwix/folder
+
+wget -c -P /mnt/Storage1/big-bear-kiwix-serve/zim https://download.kiwix.org/zim/wikipedia/wikipedia_en_all_maxi_2025-06.zim
+
+Casa OS
+
+Open terminal top left icon
+
+login with underlying OS username and password
+
+cd /your/kiwix/folder
+
+wget -c -P /mnt/Storage1/big-bear-kiwix-serve/zim https://download.kiwix.org/zim/wikipedia/wikipedia_en_all_maxi_2025-06.zim
