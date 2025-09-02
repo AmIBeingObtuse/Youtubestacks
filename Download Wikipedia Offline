@@ -24,11 +24,19 @@ cd C:\Users\keith\Documents\Kiwix
 
 Invoke-WebRequest -Uri "https://download.kiwix.org/zim/wikipedia/wikipedia_en_all_maxi_2024-01.zim" -OutFile "wikipedia_en_all_maxi_2024-01.zim"
 
+Alternatively, if that command does not work because the link has been removed online as it has recently used the below command.
+
+Invoke-WebRequest -Uri "https://dumps.wikimedia.org/kiwix/zim/wikipedia/wikipedia_en_all_maxi_2024-01.zim" -OutFile "wikipedia_en_all_maxi_2024-01.zim"
+
 Linux
 
 cd /your/kiwix/folder
 
 wget -c -P /mnt/Storage1/big-bear-kiwix-serve/zim https://download.kiwix.org/zim/wikipedia/wikipedia_en_all_maxi_2025-06.zim
+
+Alternatively, if that command does not work because the link has been removed online as it has recently used the below command 
+
+wget -c -P /mnt/Storage1/big-bear-kiwix-serve/zim https://dumps.wikimedia.org/kiwix/zim/wikipedia/wikipedia_en_all_maxi_2024-01.zim
 
 Casa OS
 
