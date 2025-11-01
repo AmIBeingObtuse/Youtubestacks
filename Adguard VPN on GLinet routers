@@ -61,3 +61,48 @@ Allow forward from source zones = lan
 Save, save and apply.
 
 /opt/adguardvpn_cli/adguardvpn-cli connect -l GB
+
+Bonus Help (Set up automatic launch for AdGuard VPN CLI - I have not thoroughly tested this so I would becareful and backup before you fkup.):
+
+Make sure your Glinet router is connected to the internet.
+
+You need to install a text editor such as nano.
+
+On my Spitz Plus 4G router thats...
+
+opkg update
+
+opkg install nano
+
+nano /etc/init.d/adguardvpn
+
+copy the script at https://adguard-vpn.com/kb/adguard-vpn-for-linux/setting-up-on-a-router/openwrt/#7--set-up-automatic-launch-for-adguard-vpn-cli
+
+Paste this into the file you just opened
+
+The script is without quotes...
+
+""
+#!/bin/sh /etc/rc.common
+# Example script
+# Copyright (C) 2007 OpenWrt.org
+START=99
+STOP=99
+HOME=/root
+start() {
+        /opt/adguardvpn_cli/adguardvpn-cli connect
+}
+
+stop() {
+        /opt/adguardvpn_cli/adguardvpn-cli disconnect
+
+}
+""
+
+after you paste that into the file tap CTRL + O on the keyboard to save and then CTRL + X to exit the file.
+
+sudo chmod +x /etc/init.d/adguardvpn
+
+/etc/init.d/adguardvpn enable
+
+That's it. Adguard should now start on login. I have not thoroughly tested this so I would becareful and backup before you fkup.
