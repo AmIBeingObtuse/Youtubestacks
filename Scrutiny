@@ -1,0 +1,26 @@
+#Compose file created to showcase in a video on www.youtube.com/@kltechvideos/videos 
+services:
+  scrutiny:
+    image: ghcr.io/analogj/scrutiny:master-omnibus
+    container_name: scrutiny
+    # Change the port number on the left of the : to a port of your choosing the default is fine though.
+    ports:
+      - 38080:8080
+      - 38086:8086
+    restart: unless-stopped
+    # Change the path on the left of the : to a folder of your choosing.
+    volumes:
+      - /mnt/nvme_storage/Docker/big-bear-scrutiny/config:/opt/scrutiny/config
+      - /mnt/nvme_storage/Docker/big-bear-scrutiny/influxdb:/opt/scrutiny/influxdb
+      - /run/udev:/run/udev:ro
+    cap_add:
+      - SYS_RAWIO
+    # Edit the below hard drives to your own. Run LSBLK command to discover your storage media names.
+    devices:
+      - /dev/sda:/dev/sda
+      - /dev/sdb:/dev/sdb
+      - /dev/sdc:/dev/sdc
+      - /dev/sdd:/dev/sdd
+      - /dev/nvme0n1:/dev/nvme0n1
+      - /dev/nvme1n1:/dev/nvme1n1
+      - /dev/nvme2n1:/dev/nvme2n1
