@@ -1,12 +1,12 @@
 # the arrs stack - youtube.com/@kltechvideos
-# prowlarr - sonarr - radarr - lidarr - readarr
+# prowlarr - sonarr - radarr - lidarr
 # Updated compose to make more user friendly for windows users.
 # This is setup for windows users. You can go to casa os - https://www.youtube.com/watch?v=QfpZcXXGpVA&t
 # Linux with gluetun - https://www.youtube.com/watch?v=Ji1p_ZWVFDU&t
-version: "2.1"
+
 services:
   prowlarr:
-    image: lscr.io/linuxserver/prowlarr:nightly
+    image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
     environment:
       - puid=1000
@@ -17,10 +17,10 @@ services:
       - c:\users\yourusername\documents\dockerstuff\arrs\prowlarr\backup:/data/backup
       - D:\moviesnshows\downloads:/data/downloads
     ports:
-      - 9697:9696
+      - 9696:9696
     restart: unless-stopped
   sonarr:
-    image: lscr.io/linuxserver/sonarr:develop
+    image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
     environment:
       - puid=1000
@@ -63,19 +63,4 @@ services:
       - c:\users\yourusername\documents\dockerstuff\arrs\lidarr\backup:/data/backup
     ports:
       - 8686:8686
-    restart: unless-stopped
-  readarr:
-    image: lscr.io/linuxserver/readarr:develop
-    container_name: readarr
-    environment:
-      - puid=1000
-      - pgid=1000
-      - tz=Australia/Perth
-    volumes:
-      - c:\users\yourusername\documents\dockerstuff\arrs\readarr\config:/config
-      - D:\moviesnshows\books:/data/books
-      - D:\moviesnshows\downloads:/data/downloads
-      - c:\users\yourusername\documents\dockerstuff\arrs\readarr\backup:/data/backup
-    ports:
-      - 8787:8787
     restart: unless-stopped
