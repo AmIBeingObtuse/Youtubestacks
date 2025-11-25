@@ -120,22 +120,6 @@ services:
     ports:
       - 8686:8686 # Lidarr UI
 
-  readarr:
-    image: lscr.io/linuxserver/readarr:develop
-    container_name: readarr
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
-    volumes:
-      - /DATA/AppData/cmc/readarr/config:/config
-      - /DATA/AppData/cmc/books:/data/books
-      - /DATA/AppData/cmc/downloads/complete:/data/downloads
-      - /DATA/AppData/cmc/backup/readarr:/backup
-    restart: unless-stopped
-    ports:
-      - 8787:8787 # Readarr UI
-
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: flaresolverr
