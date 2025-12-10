@@ -1,0 +1,103 @@
+# Zimaboard 2 AI Setup Instructions (Under 50 Watts)
+# Companion guide for KL Tech Videos video located here https://youtu.be/CyAVcm3kPEw
+
+# --- STEP 1: BASIC SETUP & UPDATES ---
+# Update repositories and upgrade packages. 
+# WARNING: Backup your data before running system upgrades!
+sudo apt update && sudo apt upgrade -y
+
+# Reboot to apply updates
+sudo reboot now
+
+# --- STEP 2: CASA OS DOCKER FIX ---
+# This resolves issues where newer Docker versions cause CasaOS app failures.
+
+# Create the directory
+sudo mkdir -p /etc/systemd/system/docker.service.d
+
+# Create the override file (Copy and paste this entire block)
+sudo bash -c 'cat <<EOF > /etc/systemd/system/docker.service.d/override.conf
+[Service]
+Environment=DOCKER_MIN_API_VERSION=1.24
+EOF'
+
+# Reload systemd
+sudo systemctl daemon-reload
+
+# --- STEP 3: INSTALL DOCKER (Official Method) ---
+# Only run this if Docker is not already installed.
+
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install -y ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+sudo apt-get update
+
+# Install Docker Engine
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+# Restart Docker to apply the API fix from Step 2
+sudo systemctl restart docker
+
+# --- STEP 4: INSTALL CASA OS ---
+curl -fsSL https://get.casaos.io | sudo bash
+
+# --- STEP 5: NVIDIA DRIVERS ---
+# Check which drivers are available for your card
+sudo ubuntu-drivers devices
+
+# Install the driver (Replace '580' with the version recommended in the step above if different)
+sudo apt install nvidia-driver-580-server-open -y
+
+# --- STEP 6: NVIDIA CONTAINER TOOLKIT ---
+# Setup the repository
+curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \
+  && curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+  sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+  sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+
+# Enable experimental features (sometimes needed for specific GPU modes)
+sudo sed -i -e '/experimental/ s/^#//g' /etc/apt/sources.list.d/nvidia-container-toolkit.list
+
+sudo apt-get update
+
+# Install the Toolkit (This installs the latest version automatically)
+sudo apt-get install -y nvidia-container-toolkit
+
+# Reboot to finalize drivers
+sudo reboot now
+
+# Verify installation after reboot
+nvidia-smi
+
+# --- CONFIGURATION INFO ---
+
+# Environment Variables for Containers (Ollama / OpenWebUI):
+# key: NVIDIA_DRIVER_CAPABILITIES 
+# value: compute,utility
+
+# key: NVIDIA_VISIBLE_DEVICES 
+# value: all
+
+# For OpenWebUI specifically:
+# key: OLLAMA_BASE_URL 
+# value: http://<YOUR_ZIMABOARD_IP>:11434
+
+# --- OPTIONAL: EXPAND STORAGE (LVM) ---
+# WARNING: Only use if you need to expand the default Ubuntu logical volume.
+# Backup before you attempt this!
+
+# Check your drives
+lsblk
+
+# Expand the Ubuntu logical volume to use 100% of available free space
+sudo lvextend -l +100%FREE /dev/mapper/ubuntu--vg-ubuntu--lv -r
