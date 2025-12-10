@@ -1,0 +1,23 @@
+sudo apt update -y
+
+sudo apt upgrade -y
+
+#(Be carefull docker or other apps are not still upgrading/writing files as you could lose data by rebooting to early, always backup your data first and I suggest waiting at least 5 minutes before a reboot)
+
+sudo reboot
+
+#The fix
+
+sudo mkdir -p /etc/systemd/system/docker.service.d
+
+sudo nano /etc/systemd/system/docker.service.d/override.conf
+
+#Enter this in the file above
+[Service]
+Environment=DOCKER_MIN_API_VERSION=1.24
+
+#(I would recommend stopping all containers gracefully before the following commands are run! I do not accept responsibility for any data loss so listen carefully! BACKUP all data!)
+
+sudo systemctl daemon-reload
+
+sudo systemctl restart docker
