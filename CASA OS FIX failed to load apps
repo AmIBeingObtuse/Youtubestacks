@@ -1,3 +1,6 @@
+#These commands resolve the failed to load CASA os error.
+#Related to my video on KL Tech Videos here https://www.youtube.com/watch?v=4KsY9Gp1bvQ&t
+
 sudo apt update -y
 
 sudo apt upgrade -y
