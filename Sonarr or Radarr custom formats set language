@@ -1,0 +1,36 @@
+How to Force/Prioritize German Language in Radarr or Sonarr you can tweak this to any language.
+Step 1: Create the Custom Format
+Open the menu on the left side of the UI.
+
+Navigate to Settings > Custom Formats.
+
+Click the + (Add New) button.
+
+Name the new format German.
+
+Under "Conditions," select Language Custom.
+
+Configure the condition:
+
+Name: German
+
+Language: German
+
+Required: Check this box (This is crucial to ensure only German releases are grabbed).
+
+Click Save.
+
+Step 2: Apply to Your Quality Profile
+Go to Settings > Profiles.
+
+Select the profile you assign to new downloads (e.g., Any, HD - 1080p, or your custom profile).
+
+On the right side, look for the Custom Formats list.
+
+Find your new German format in the list.
+
+Set the score to 10 (or higher than any other custom format scores you have).
+
+Optional: Ensure the Minimum Custom Format Score for the profile is set to 0.
+
+Pro Tip: If you want Radarr/Sonarr to automatically upgrade your existing library to German versions, check the Upgrades Allowed box inside the profile settings before saving.
