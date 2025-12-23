@@ -1,5 +1,8 @@
 Checkout my youtube channel at www.youtube.com/@kltechvideos/videos
 
+A better looking version of this guide can be found here with larger text:
+https://github.com/AmIBeingObtuse/Youtubestacks/wiki/Configuring-NordVPN-Proxy-for-Prowlarr
+
 🌐 Configuring NordVPN Proxy for Prowlarr
 This guide provides a step-by-step walkthrough for routing your Prowlarr indexer traffic through a NordVPN SOCKS5 proxy. This setup enhances privacy and can help bypass ISP-level blocking.
 
