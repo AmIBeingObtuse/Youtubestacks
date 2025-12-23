@@ -1,0 +1,65 @@
+Checkout my youtube channel at www.youtube.com/@kltechvideos/videos
+
+🌐 Configuring NordVPN Proxy for Prowlarr
+This guide provides a step-by-step walkthrough for routing your Prowlarr indexer traffic through a NordVPN SOCKS5 proxy. This setup enhances privacy and can help bypass ISP-level blocking.
+
+📋 Prerequisites
+Before beginning, ensure you have:
+
+An active NordVPN subscription.
+
+Prowlarr installed and running.
+
+🏗️ Setup Instructions
+1. Identify Proxy Server Details 📍
+First, you need to select a proxy server location. You can find the specific server addresses in the official NordVPN documentation.
+
+Reference Link: https://support.nordvpn.com/hc/en-us/articles/20195967385745-NordVPN-proxy-setup-for-qBittorrent
+
+Action: Navigate to the qBittorrent section of that page and copy the Host Address (e.g., amsterdam.nl.socks.nordhold.net) and the Port (typically 1080).
+
+2. Retrieve Manual Service Credentials 🔑
+Your standard NordVPN email and password will not work for SOCKS5 authentication. You must use your unique Service Credentials found in your dashboard.
+
+Dashboard Link: https://my.nordaccount.com/dashboard/nordvpn/
+
+Action: Log in, scroll down to the Manual Setup section, and copy your:
+
+Service Username
+
+Service Password
+
+[!IMPORTANT]
+
+Treat these credentials like a private key. Do not share them or include them in public code commits or screenshots.
+
+3. Configure Proxy in Prowlarr ⚙️
+Now, apply these details to Prowlarr to establish the connection.
+
+Open the Prowlarr Web UI.
+
+Navigate to Settings ➡️ Indexers.
+
+Note: Be sure you are in the Settings menu, not the main Indexer dashboard list.
+
+Click the [+] icon under the Proxies section and select SOCKS5.
+
+Fill in the following fields:
+
+Name: NordVPN Proxy
+
+Host: (The address from Step 1)
+
+Port: 1080
+
+Username & Password: (The Service Credentials from Step 2)
+
+4. Implement Tagging for Traffic Routing 🏷️
+To ensure specific indexers use the proxy, you must link them using Tags. This ensures that only the traffic you want is routed through the proxy.
+
+In Proxy Settings: Add a specific tag (e.g., proxy-tag) to the proxy configuration you just created.
+
+In Indexer Settings: Go to your individual Torrent or Usenet indexers and add the exact same tag (proxy-tag) to their configuration. This "links" the indexer to the proxy.
+
+✅ Verification
+Once configured, use the Test button within the Prowlarr Proxy settings. A green checkmark confirms that Prowlarr is successfully communicating with the NordVPN server.
