@@ -1,0 +1,20 @@
+version: 1
+
+notify:
+  urls:
+    - "discord://token@id" 
+    #- "telegram://token@telegram?channels=channel-1[,channel-2,...]"
+    #- "pushover://shoutrrr:apiToken@userKey/?priority=1&devices=device1[,device2, ...]"
+    #- "slack://[botname@]token-a/token-b/token-c"
+    #- "smtp://username:password@host:port/?fromAddress=fromAddress&toAddresses=recipient1[,recipient2,...]"
+    #- "teams://token-a/token-b/token-c"
+    #- "gotify://gotify-host/token"
+    #- "pushbullet://api-token[/device/#channel/email]"
+    #- "ifttt://key/?events=event1[,event2,...]&value1=value1&value2=value2&value3=value3"
+    #- "mattermost://[username@]mattermost-host/token[/channel]"
+    #- "ntfy://username:password@host:port/topic"
+    #- "hangouts://chat.googleapis.com/v1/spaces/FOO/messages?key=bar&token=baz"
+    #- "zulip://bot-mail:bot-key@zulip-domain/?stream=name-or-id&topic=name"
+    #- "join://shoutrrr:api-key@join/?devices=device1[,device2, ...][&icon=icon][&title=title]"
+    #- "script:///file/path/on/disk"
+    #- "https://www.example.com/path"
