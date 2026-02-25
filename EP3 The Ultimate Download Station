@@ -77,7 +77,7 @@ services:
     #   - 1900:1900/udp # optional # Jellyfin Simple Service Discovery Protocol
 
   deluge:
-    image: lscr.io/linuxserver/deluge:2.2.0-r1-Is364
+    image: lscr.io/linuxserver/deluge:2.2.0-r1-ls364
     container_name: deluge
     environment:
       - PUID=1000
