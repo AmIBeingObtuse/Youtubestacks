@@ -9,3 +9,9 @@ sudo groupadd docker_group && sudo useradd -M -g docker_group docker_user && id 
 #Make sure you edit the paths to suit your own and do so 3 times across the full command (case sensitive)
 
 sudo mkdir -p /media/ssd-storage/docker && sudo chown -R docker_user:docker_group /media/ssd-storage/docker && ls -ld /media/ssd-storage/docker
+
+
+#ONLY if you are changing permissions for an exsisting media directory use this command.
+#Be aware it will potentially stop your other apps from seeing the files so follow the video until the end.
+
+sudo chown -R docker_user:docker_group /path/to/your/files
