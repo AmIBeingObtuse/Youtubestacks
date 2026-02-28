@@ -1,0 +1,11 @@
+#This file is intended to be used alongside my ZIMA OS Ultimate setup video.
+#www.youtube.com/@kltechvideos/videos
+
+#Create user docker_user and group docker_group. Then output the PUID and GUID.
+
+sudo groupadd docker_group && sudo useradd -M -g docker_group docker_user && id docker_user
+
+#Create a folder and assign the above user/group as owner. You will need to modify this command to suit your own paths!
+#Make sure you edit the paths to suit your own and do so 3 times across the full command (case sensitive)
+
+sudo mkdir -p /media/ssd-storage/docker && sudo chown -R docker_user:docker_group /media/ssd-storage/docker && ls -ld /media/ssd-storage/docker
