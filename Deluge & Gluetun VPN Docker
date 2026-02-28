@@ -1,0 +1,59 @@
+services:
+  gluetun:
+    image: qmcgaw/gluetun:latest
+    container_name: gluetun
+    # line above must be uncommented to allow external containers to connect.
+    # See https://github.com/qdm12/gluetun-wiki/blob/main/setup/connect-a-container-to-gluetun.md#external-container-to-gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    ports:
+      - 8888:8888/tcp # HTTP proxy
+      - 8388:8388/tcp # Shadowsocks
+      - 8388:8388/udp # Shadowsocks
+      - 8112:8112
+      - 6881:6881
+      - 6881:6881/udp
+      - 58846:58846 #optional
+    volumes:
+      - /media/yourdisk/docker/gluetunstack/gluetun:/gluetun
+    environment:
+      - VPN_SERVICE_PROVIDER=YourProvider
+      - OPENVPN_USER=YourVPNUserName
+      - OPENVPN_PASSWORD="YourVPNpassword-NotAlwaysTheSameAsLogin"
+      - SERVER_COUNTRIES=Netherlands
+      - PUID=1000
+      - PGID=1001
+      - TZ=Europe/London
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - ping -c 1 1.1.1.1 || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 90s # <-- This is the key setting to add or increase
+    restart: always
+  deluge:
+    image: lscr.io/linuxserver/deluge:2.2.0-r1-ls364
+    container_name: delugewgluetun
+    environment:
+      - PUID=1000
+      - PGID=1001
+      - TZ=Europe/London
+      - DELUGE_LOGLEVEL=error #optional
+    volumes:
+      - /media/yourdisk/docker/gluetunstack/deluge:/config
+      - /media/yourdisk/docker/incomplete-downloads:/data/incomplete-downloads
+      - /media/yourdisk/docker/downloads:/data/downloads
+      #ports:
+      #- 8112:8112
+      #- 6881:6881
+      #- 6881:6881/udp
+      #- 58846:58846 #optional
+    depends_on:
+      gluetun:
+        condition: service_healthy
+    restart: always
+    network_mode: service:gluetun
