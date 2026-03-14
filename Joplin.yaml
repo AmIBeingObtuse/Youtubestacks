@@ -1,0 +1,45 @@
+#After you download this file. Change the name to docker-compose.yaml
+#Video releated is KL Tech Videos https://youtu.be/g85mbXHlixU
+
+services:
+  big-bear-joplin:
+    container_name: big-bear-joplin
+    environment:
+      - APP_BASE_URL=http://192.168.6.4:22300 #Do not forget to change this to the ip where you installed the joplin server
+      - APP_PORT=22300
+      - DB_CLIENT=pg
+      - MAX_TIME_DRIFT=0
+      - POSTGRES_DATABASE=joplin
+      - POSTGRES_HOST=big-bear-joplin-db
+      - POSTGRES_PASSWORD=27a1d42a-a15d-43dd-903c-2a73538647fe
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=bigbear
+    image: joplin/server:latest
+    ports:
+      - 22300:22300
+    restart: unless-stopped
+    depends_on:
+      big-bear-joplin-db:
+        condition: service_started
+        required: true
+
+    networks:
+      - big_bear_joplin_network
+
+  big-bear-joplin-db:
+    container_name: big-bear-joplin-db
+    environment:
+      - POSTGRES_DB=joplin
+      - POSTGRES_PASSWORD=27a1d42a-a15d-43dd-903c-2a73538647fe
+      - POSTGRES_USER=bigbear
+    image: postgres:14.2
+    restart: unless-stopped
+    volumes:
+      - H:\Documents\joplindb:/var/lib/postgresql/data
+
+    networks:
+      - big_bear_joplin_network
+networks:
+  big_bear_joplin_network:
+    name: big-bear-joplin_big_bear_joplin_network
+    driver: bridge
