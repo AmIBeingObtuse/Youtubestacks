@@ -1,0 +1,43 @@
+#This compose is related to my youtube video amnezia wireguard on zima os.
+#Check it out here... https://youtu.be/aMFuEU-Tkbg
+#KLTECHVIDEOS
+
+name: amnezia-wg-easy
+services:
+  amnezia-wg-easy:
+    image: ghcr.io/w0rng/amnezia-wg-easy:latest
+    container_name: amnezia-wg-easy
+    environment:
+      - WG_HOST=your.ddns.or.public.ip # Your external entry point
+      - PASSWORD=YourSecurePassword    # Web UI login
+      - PORT=51821                    # Web UI port
+      - WG_PORT=51820                 # VPN tunnel port
+      # AMNEZIA OBFUSCATION (The Stealth Sauce)
+      - JC=5                          # Junk packet count
+      - JMIN=50                       # Min junk size
+      - JMAX=1000                     # Max junk size
+      - S1=75                         # Handshake padding 1
+      - S2=75                         # Handshake padding 2
+      - H1=1234567891                 # Magic Header 1
+      - H2=1234567892                 # Magic Header 2
+      - H3=1234567893                 # Magic Header 3
+      - H4=1234567894                 # Magic Header 4
+      # ROUTING RULES (Standard Secure Internet + Home Access)
+      - WG_POST_UP=iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+      - WG_POST_DOWN=iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
+    volumes:
+      - /DATA/AppData/amnezia-wg-easy:/etc/wireguard
+      # ADDED: Essential for the container to access ZimaOS kernel modules
+      - /lib/modules:/lib/modules:ro
+    ports:
+      - 443:51820/udp # You can change this back to 51820:51820/udp if you don't want to run this on 443.
+      - 51821:51821/tcp
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    # ADDED: Provides the container the virtual tunnel driver needed to create wg0
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    sysctls:
+      - net.ipv4.ip_forward=1
+    restart: unless-stopped
