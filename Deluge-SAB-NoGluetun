@@ -1,0 +1,38 @@
+#This compose file brings together SABNZBD-Deluge.
+#Linked to video KL Tech Videos - https://www.youtube.com/watch?v=Pr7tPDe3Fks
+services:
+  deluge:
+    image: lscr.io/linuxserver/deluge:2.2.0-r1-ls364
+    container_name: deluge
+    environment:
+      - PUID=1000
+      - PGID=1001
+      - TZ=Europe/London
+      - DELUGE_LOGLEVEL=error #optional
+    volumes:
+      - /media/yourdisk/docker/gluetunstack/deluge:/config
+      - /media/yourdisk/docker/incomplete-downloads:/data/incomplete-downloads
+      - /media/yourdisk/docker/downloads:/data/downloads
+    ports:
+      - 8112:8112 # Deluge web interface
+      - 6881:6881 # Deluge torrent traffic
+      - 6881:6881/udp # Deluge torrent traffic
+      - 58846:58846 # Deluge daemon (optional)
+    restart: always
+
+  sabnzbd:
+    image: linuxserver/sabnzbd:latest
+    container_name: sabnzbd
+    cpu_shares: 90
+    environment:
+      - PUID=1000
+      - PGID=1001
+      - TZ=Europe/London
+    volumes:
+      - /media/yourdisk/docker/gluetunstack/sabnzbd:/config
+      - /media/yourdisk/docker/incomplete-downloads:/data/incomplete-downloads
+      - /media/yourdisk/docker/downloads:/data/downloads
+      - /media/yourdisk/docker/backup/sabnzbd:/backup
+    ports:
+      - 7171:8080 # SABnzbd web interface
+    restart: unless-stopped
