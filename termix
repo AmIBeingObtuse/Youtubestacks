@@ -1,0 +1,30 @@
+#Termix - Server managment has never been this easy! KL Tech Videos - https://youtu.be/alo4G5N95ig
+services:
+  termix:
+    image: ghcr.io/lukegus/termix:latest
+    container_name: termix
+    restart: unless-stopped
+    # ports are ignored in host mode; the app listens directly on the host
+    volumes:
+      - /your/path:/app/data
+    ports:
+      - 8080:8080
+    environment:
+      PORT: "8080"
+      TZ: Europe/London
+      #PGID: 1002
+      #PUID: 999
+    networks:
+      - termix-net
+  guacd:
+    image: guacamole/guacd:1.6.0
+    container_name: guacd
+    restart: unless-stopped
+    ports:
+      - "4822:4822"
+    networks:
+      - termix-net
+      
+networks:
+  termix-net:
+    driver: bridge
