@@ -1,5 +1,7 @@
 #This compose file brings together Gluetun-SABNZBD-Deluge-Prowlarr.
 #Linked to video KL Tech Videos - https://www.youtube.com/watch?v=Pr7tPDe3Fks
+#BE AWARE ZIMA OS UPDATE 1.7 has an issue with network mode needed by this application which maybe fixed
+#in a later patch. See workaround here: https://github.com/IceWhaleTech/ZimaOS/issues/565
 services:
   gluetun:
     image: qmcgaw/gluetun:latest
