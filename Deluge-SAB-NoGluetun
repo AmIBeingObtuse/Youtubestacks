@@ -1,5 +1,7 @@
 #This compose file brings together SABNZBD-Deluge.
 #Linked to video KL Tech Videos - https://www.youtube.com/watch?v=Pr7tPDe3Fks
+#BE AWARE ZIMA OS UPDATE 1.7 has an issue with network mode needed by this application which maybe fixed
+#in a later patch. See workaround here: https://github.com/IceWhaleTech/ZimaOS/issues/565
 services:
   deluge:
     image: lscr.io/linuxserver/deluge:2.2.0-r1-ls364
