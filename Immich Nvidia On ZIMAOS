@@ -1,0 +1,162 @@
+#For upcoming KL Tech Vidoes video!
+networks:
+  immich:
+    name: immich_immich
+    driver: bridge
+    ipam: {}
+    external: false
+services:
+  database:
+    command: null
+    container_name: immich-postgres
+    deploy:
+      resources:
+        limits:
+          memory: 4GB
+          cpus: "1.00"
+        reservations:
+          memory: 256MB
+          cpus: "0.00"
+      placement: {}
+    entrypoint: null
+    environment:
+      POSTGRES_DB: immich
+      POSTGRES_INITDB_ARGS: --data-checksums
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+    hostname: immich-postgres
+    image: ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0@sha256:bcf63357191b76a916ae5eb93464d65c07511da41e3bf7a8416db519b40b1c23
+    labels:
+      icon: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@gh-pages/apps/org.icewhale.immich/assets/icon.svg
+    networks:
+      - immich
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /DATA/AppData/immich/pgdata
+        target: /var/lib/postgresql/data
+        bind:
+          create_host_path: true
+  immich-machine-learning:
+    command: null
+    container_name: immich-machine-learning
+    deploy:
+      resources:
+        limits:
+          memory: 15.37GB
+          cpus: "1.00"
+        reservations:
+          memory: 256MB
+          cpus: "0.00"
+          devices:
+            - capabilities:
+                - gpu
+              device_ids:
+                - "0"
+      placement: {}
+    entrypoint: null
+    environment:
+      DB_DATABASE_NAME: immich
+      DB_PASSWORD: postgres
+      DB_USERNAME: postgres
+      NVIDIA_VISIBLE_DEVICES: all
+    hostname: immich-machine-learning
+    healthcheck: {}
+    image: ghcr.io/immich-app/immich-machine-learning:v3-cuda
+    labels:
+      icon: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@gh-pages/apps/org.icewhale.immich/assets/icon.svg
+    networks:
+      - immich
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /DATA/AppData/immich/model-cache
+        target: /cache
+      - type: bind
+        source: /dev/dri
+        target: /dev/dri
+  immich-server:
+    command: null
+    container_name: immich-server
+    depends_on:
+      database:
+        condition: service_started
+        required: true
+      redis:
+        condition: service_started
+        required: true
+    deploy:
+      resources:
+        limits:
+          memory: 4GB
+          cpus: "1.00"
+        reservations:
+          memory: 1GB
+          cpus: "0.00"
+      placement: {}
+    entrypoint: null
+    environment:
+      DB_DATABASE_NAME: immich
+      DB_PASSWORD: postgres
+      DB_USERNAME: postgres
+    hostname: immich-server
+    healthcheck: {}
+    image: ghcr.io/immich-app/immich-server:v3
+    labels:
+      icon: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@gh-pages/apps/org.icewhale.immich/assets/icon.svg
+    networks:
+      - immich
+    ports:
+      - mode: ingress
+        target: 2283
+        published: "2283"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /DATA/Gallery/immich
+        target: /data
+      - type: bind
+        source: /etc/localtime
+        target: /etc/localtime
+  redis:
+    command: null
+    container_name: immich-redis
+    deploy:
+      resources:
+        limits:
+          memory: 4GB
+          cpus: "1.00"
+        reservations:
+          memory: 256MB
+          cpus: "0.00"
+      placement: {}
+    entrypoint: null
+    hostname: immich-redis
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - redis-cli ping || exit 1
+    image: docker.io/valkey/valkey:9@sha256:8e8d64b405ce18f41b8e5ee20aa4687a8ed0022d1298f2ce31cdcf3a76e09411
+    labels:
+      icon: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@gh-pages/apps/org.icewhale.immich/assets/icon.svg
+    networks:
+      - immich
+    restart: unless-stopped
+    volumes: []
+x-casaos:
+  hostname: ""
+  icon: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@gh-pages/apps/org.icewhale.immich/assets/icon.svg
+  id: org.icewhale.immich
+  index: /
+  is_uncontrolled: true
+  main: immich-server
+  port_map: "2283"
+  repo_id: zimaos-appstore
+  scheme: http
+  store_app_id: immich
+  title:
+    custom: Immich
+    en_US: Immich
+  version: 3
+name: immich
