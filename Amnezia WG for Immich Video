@@ -1,0 +1,64 @@
+#KL TECH VIDEOS - Setup ZIMA OS - IMMICH - AMNEZIA WG - Import your google photos with Immich GO - https://youtu.be/zxO4FLUThRQ
+services:
+  amnezia-wg-easy:
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    command: null
+    container_name: amnezia-wg-easy
+    deploy:
+      resources:
+        limits:
+          memory: 4GB
+          cpus: "1.00"
+        reservations:
+          memory: 256MB
+          cpus: "0.00"
+      placement: {}
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    entrypoint: null
+    environment:
+      PASSWORD: '"ARandomPassword"'
+      PORT: "51821"
+      WG_HOST: yourpublicIP
+      WG_PORT: "51820"
+      WG_POST_DOWN: iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
+      WG_POST_UP: iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+    image: ghcr.io/w0rng/amnezia-wg-easy:latest
+    network_mode: bridge
+    ports:
+      - mode: ingress
+        target: 51820
+        published: "51820"
+        protocol: udp
+      - mode: ingress
+        target: 51821
+        published: "51821"
+        protocol: tcp
+    restart: unless-stopped
+    sysctls:
+      net.ipv4.ip_forward: "1"
+    volumes:
+      - type: bind
+        source: /DATA/AppData/amnezia-wg-easy
+        target: /etc/wireguard
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /lib/modules
+        target: /lib/modules
+        read_only: true
+        bind:
+          create_host_path: true
+x-casaos:
+  hostname: ""
+  index: /
+  is_uncontrolled: false
+  main: amnezia-wg-easy
+  port_map: "51821"
+  scheme: http
+  store_app_id: compose-15183a0e7863be0e
+  title:
+    custom: Amneziawgeasy
+name: compose-a3f185144c864dc2
